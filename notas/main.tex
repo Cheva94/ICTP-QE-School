@@ -1,0 +1,146 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Tipo de documento e idiomas de entrada
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[12pt,final,twoside,onecolumn,openright,titlepage]{book}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc} % Carácteres especiales como acentos
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Símbolos matemáticos y otros simbolos
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{amsfonts} % Símbolos matemáticos
+\usepackage{amsmath} % Símbolos matemáticos
+\usepackage{amsthm} % Símbolos matemáticos
+\usepackage{physics} % Cosas de Física
+\usepackage{esint} % Límites integrales
+\usepackage{xfrac} % Fracciones en diagonal
+\usepackage{amssymb} % Permite la flecha circular de las conmutaciones cíclicas.
+\usepackage{siunitx} % Sistema SI de unidades.
+
+% \newtheorem{prop}{Proposición} [section] % Generar una proposición con numeración según sección
+% \newtheorem{teo}{Teorema} [section] % Generar un teorema con numeración según sección
+% \newtheorem{lema}{Lema} [section] % Generar un lema con numeración según sección
+
+\numberwithin{equation}{section}  % Generar una ecuación con numeración según sección
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Colores Personalizados
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[dvipsnames]{xcolor} % Permite utilizar colores
+
+\definecolor{verdecito}{RGB}{0, 161, 137}
+\definecolor{naranjita}{RGB}{250, 98, 0}
+\definecolor{rojito}{RGB}{237, 59, 59}
+\definecolor{azulcito}{RGB}{92, 162, 247}
+\definecolor{yellow}{RGB}{235, 232, 66}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Tablas, gráficos, márgenes, encolumnado y enumeración flexible
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{booktabs} % Reglas en las tablas
+\usepackage{float} % Tablas y figuras flotantes
+\usepackage{graphicx} % Ingresar gráficos
+\usepackage{subfigure} % Generación de subfiguras
+\usepackage{tcolorbox} % Hacer cajas con colores para destacar algo.
+% \usepackage[a4paper,width=165mm,top=20mm,bottom=20mm]{geometry}
+\usepackage[a4paper,left=20mm,right=20mm,top=25mm,bottom=20mm]{geometry}
+\usepackage{fancyhdr}
+\setlength{\headheight}{16pt}
+
+\addto\captionsspanish{\def\tablename{Tabla}} % Cambia de "cuadro" a "tabla" cuando se genera una table.
+\usepackage{multicol} % Escribir encolumando.
+\usepackage{enumerate} % Enumerar de forma flexible
+
+\newcommand{\ReglaTitulo}{\rule{\linewidth}{1mm}} % Command to make the lines in the title page
+\newcommand{\ReglaApartado}{\rule{\linewidth}{0.5mm}} % Command to make the lines in the title page
+
+\usepackage{indentfirst}
+
+\usepackage[labelfont=bf]{caption}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % Bibliografia
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% \usepackage[super,sort&compress,comma]{natbib} % La cita es un supraíndice numérico. Citas no continuas se separan con comas, pero citas continuas se comprimen y separan con guión. Además, se ordenan crecientemente.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Atajos
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \newcommand{\B}{\mathbb{B}}
+\newcommand{\Obs}[1]{\begin{tcolorbox}[sharp corners, colframe=naranjita, title=Observación]{#1}\end{tcolorbox}}
+% \newcommand{\pSO}{p$\mathbb{SO}$ }
+% \newcommand{\SO}{$\mathbb{SO}$ }
+% \newcommand{\LO}{$\mathbb{LO}$ }
+\newcommand{\definicion}[1]{\textcolor{verdecito}{\textbf{\textit{#1}}}}
+
+\renewcommand\labelitemi{$\bullet$}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Ahora si: TAMO ACTIVO
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title{\Huge \bf{QE 2021 ICTP Summer School: Lecture Notes}}
+\author{Ignacio José Chevallier-Boutell}
+\date{}%\today % Pone la fecha en el día que se recopila el documento
+
+\begin{document}
+
+    \maketitle
+    \thispagestyle{empty}
+
+    \frontmatter
+        \pagestyle{fancy}
+        \fancyhead{}
+        \fancyhead[C]{ÍNDICE GENERAL}
+        \renewcommand{\headrulewidth}{1pt}
+        \tableofcontents  % Genera el índice
+
+    \mainmatter
+        \pagestyle{fancy}
+        \fancyhead{}
+        \fancyhead[LO]{CAPÍTULO \thechapter}
+        \fancyhead[RE]{SECCIÓN \thesection}
+        \renewcommand{\headrulewidth}{1pt}
+
+% \part{Abordaje desde la física}
+
+    \chapter{Día 1}
+
+      \input{caps/D1}
+
+    \chapter{Día 2}
+
+      \input{caps/D2}
+
+    \chapter{Día 3}
+
+      \input{caps/D3}
+
+    % \appendix
+    %
+    %   \chapter{git}
+    %
+    %   \input{capitulos/git}
+
+
+\end{document}
+
+\section{Teórico}
+
+  \definicion{Topic:}
+
+  \definicion{Speaker:}
+
+\section{Hands-on}
+
+  \definicion{Topic:}
+
+  \definicion{Speaker:}
+
+\section{Q\&A}

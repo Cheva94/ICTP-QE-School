@@ -1,0 +1,239 @@
+\subsection{DFPT}
+
+  Las funciones respuestas tienen la siguiente forma general
+    $$propiedad = \frac{\partial variable}{\partial fuerza}$$
+
+  donde fuerza refiere a la fuerza de algún campo externo (eléctrico, magnético, de fuerzas/tensiones, etcétera).
+
+  Todas etas propiedades son macroscópicas. También se pueden pensar en funciones de respuesta microscópicas (o sea no sólo hay macro, hay de las dos) (ver filmina los ejemplos) En lo micro la perturbación externa tiene el tamaño adecuado para lo que se busca.
+
+  Teorema de Hellmann-Feynman: es el ingrediente principal dentro de la teoría de funciones respuestas.
+    $$H_{\lambda} \Psi_{\lambda} = E_{\lambda} \Psi_{\lambda}$$
+
+  THF: supongamos qeu el H depende de un parámetro externo ${\lambda}$ (puedo ser algo individiual o colectivo). El parámetro NO es una variable dinámica. El teorema establece que
+    $$E_{\lambda}^{'} = \frac{\partial}{\partial \lambda} \expval{H_{\lambda}}{\Psi_{\lambda}}$$
+
+    la comilla es derivada!
+  ya que el autovalore siempre puede pensarse como el val de exp del H sobre los autoestados. Aplicando la regla de la cadena (hay una dependencia triple en lambda: bra, op, ket).
+    $$\frac{\partial}{\partial \lambda} \expval{H_{\lambda}}{\Psi_{\lambda}} = $$
+
+  Desarrolla y justifica. La norma del autovalor es uno (supuesto de la teoría). Y de ahí se llega a la cuestión que habíamos encontrado antes.
+
+  Que la derivada del autovalor sea independiente de la derivada de los autovectores no es trivial: puedo avergiuar la derivada del autovalor con solo derivar el operador!
+    $$E__{\lambda} = \underbrace{min}_{\Psi : \bracket{\Psi}=1} \expval{H_{\lambda}}{\Psi}$$
+
+  El THF siempre es aplicable cuando el problema se puede escribir en términos de algún principio variacional. Hace una explicación copada ahí.
+
+  Por definición el mínimo se encuentre derivando a igualando a cero: como G depende de lambda, el mínimo también depende. $x \rightarrow x(\lambda)$.
+  [...]
+  $$g' (\lambda) = \frac{\partial G}{\partial \lambda}$$
+
+  Llega a una generalización aplicable a cualquier principio variacional, extendiendo la aplicabilidad del THF.
+
+  Aplicación: susceptibilidades $\chi$ (derivada de un operador B -el anterior H- con respecto a un parámetro $\alpha$ - el previo lambda - la fuerza de la perturbación) como derivadas de la energía. Los sub BA: operador B perturbación A. A es una perturbación física y B un observable.
+
+  Ahora pienso en un H descripto por una perturbación donde la perturbación es la propia observación.
+
+  Si depende de ambos (la perturbación física y la perturbación ficticia) llego a una derivada segunda.
+
+  [fui al baño - algo de Taylor]
+
+  Usa la nomenclatura de la teoría perturbacional para determinar el primer y segundo orden del Taylor a partir de valores de expectación.
+
+  A la larga cambia la derivación por una integral: mucho más fácil de calcular!
+
+  F_i y h_ij --> factores de respuestas (los que acompañan a los parámetros lambda)
+
+  ---Pasamos esto a DFT---
+
+  Expande el potencial. Define la energía: funcional universal que no depende de la perturbación y coupling w/ext potencial. Esto sería la base de DFT.
+
+  Aplica THF para derivar lo de recién. Elfuncional universal no depende de lambda.
+
+  A partir de esto, derivo una segunda vez--> DFPT --> tengo la derivada del ground-state chdens. Integral de la i-esima perturbación con la density response to de j. (incluso al vesre por la simetría)
+
+  Entonces para calcular la segunda derivada, debemos calcular la respuesta de la densidad de carga. Como n(r) es la suma sobre las normas cuadráticas de los autoestados KS, la derivada es sencilla de expresar. Usualmente los autoestados son reales, así que se peude olvidar la conjugación. Sin embargo a veces son útiles los estados de Bloch y ahí sí juega lo complejo.
+
+  Hizo un par de explicaciones de bibliografía. Llega a una KS eqs en términos de proyectores.
+
+  varias cosas que me perdi acerca de la DFPT
+
+  En DFPT se linealizan 3 eqs de la DFT (hay unos diagramas de flujo)
+
+  Una vez que linealizan, se resuelve SC un sistema de 3 ecuaciones lineales.
+
+\subsection{Simulando vibraciones atómicas}
+
+  Un cristal perfecto lo podemos describir como un potencial externo vas una cosa periódica. Cual es la rta del sist respecto al desplazamiento individual? A primer orden el potencial perturbativao  es lineal en la amplitud de la distorsión atómica. Cómo depende la energía de la amplitud de la distorción? Taylor nos tira una derivada segunda (la de primer orden muere porque se supone que estamos en el mínimo vro - es la fuerza la primera - estamos en equilibrio). O sea definimos a la energía como: punto cero + fuerza + curvatura. Como la fuerza se anula y el punto cero es arbitario, podemos pensarla directamente como curvatura o como derivadas primera de la fuerza. Esto se conoce como fuerzas interatómicas en el cotexto de la dinámica de redes.
+
+  Llega a un determinante de 3Nx3N. El autovalor es el cuadrado de la frecuencia vibracional. Hay una masa (M): si son iguales cero drama, si son distintas ojito. La masa sale por una cuestión de la teoria de pequeñas vibraciones. Cuestión: tiene que estaar, no te jode, no la jodas.
+
+  Tiene que ser positivo el determiannte que se resuelve (prueba de la derivada segunda). Si es negativo: saddle! Las freq cuadradas tienen que ser las positivas. Si son negativas: hay algo mal en el proceso o es una propiedad particular del sistema.
+
+\subsection{Perturbaciones monocromáticas}
+
+  Si queremos acomodar fonones de long de onda arbitraria, debemos ahcer cálculos gigantes. Lo mejor es recurrir a la simetría: los fonones se clasifican en términos de sus wave numbers. Los fonones de diferente long de onda no interactúan entre sí. (pero dps dijo que si?)
+
+  Esto se refleja en DFPT según: reescribir la long de onda en forma recíproca. Los orbitales no perturbados tiene vecotr de onda k definido (bloch). Pero el fonon tiene vecot rde onda q. Entonces resulta en k+q: número de onda general del resultado.
+
+  Como el H es periódico, el KS orbital perturbado debe tener el mismo vector de onda (k+q). Es un estado de Bloch. La desidad respuesta tiene el mismo número de onda que la perturbación. Lo mismo pasa con el potecial.
+
+  Todo el cálculo puede mapearse entonces en calcular la parte periódica de la función de onda reséusta. La complejidad computacional del sistema yace en un número de electrones, lo que hace que (comparo con la no perturbada).
+
+\subsection{Fonones en materiales polares}
+
+  Generan un campo eléctrico macroscópico estos materiales. Se complica la question Babe. La energía depende de la distorción de red u y del campo E. Cuadratico en cada uno más el acople entre ellos (potencial termodinámico que define el chiste)
+
+  La fuerza es la derivada de la energía respecto a la perturbación. El inducción electrica es la derivada de la energía respecto al campo E (interno).
+
+  La parturbación tiene número de onda definido. El campo E es irrotacional en el espacio recíproco. En ausencia de cargas y corrientes: cuando la polarización del fonon es ortogonal a q, entonces la eq de Mawell se satisfce sólo cuando el campo es idénticamente nulo. Para los fonones transversales entonces la expresión es más sencilla :)
+
+  Ahora consideramos la otra de Mawell: se cumple sólo cuando D es nulo. Los fonones paralelos tienen otra expresión.
+
+  Etonces en materiales polares tenés dispersión fonónica donde la contribución longitudinal tiene mayor no sé qué que la transverasl (?)
+
+  Debemos tener una estimada de la carga efectiva y la constante electrica para calcular los fonones longitudinales. Debemos poder calcular eso: QE lo pede hacer! Las dificultades están que los campos eléctricos macroscópicos son descriptos por una dependencia creciente con algo ...
+
+  Tomar unos límites antes de calcular. El código lo hace.
+
+\subsection{Constantes de fuerza interatómica}
+
+  A un dado número de onda, la DFPT nos da las frecuencia de esa longitud de onda (?). Métrica dinámica. Más suave? shoret dependence. dificultades? mateirales polares dadas las singularidades. Se resta el comportamiento no analítico en el límite de long de onda larga. Sacas la singularida. Interpolas con FT.
+
+\subsection{Características principales}
+
+  Calculo de funicones respuesta en términos de orbitales respuesta.
+
+  Se resulven sistemas lineales (no se calculan estados de conducción)
+
+  Sólo se debe calcular la respuesta a la perturbación dadas
+
+  También se pueden tratar perturbaciones no locales, no periódicas o campos eléctricos macroscópicos.
+
+\section{Hands-on}
+
+\subsection{Introducción}
+
+    Vamos a calcular la fono freq y fonon disp.
+
+    Ver conceptos básicos.
+
+    usa: alfa comp desplazamiento del átomo s (son 3xN) autovec
+
+    La cantidad de fonon's freq que obtenemos es 3N.
+
+    El concepto central: interactomic force Constantes
+
+    Habla cómo llega al problema de autovaores. Lo que queremos diagonalizar es la matriz dinámica. Los autovalores son las freq fonónicas. Los autovectores están asociados (no son) los atomc displac (están divididos por la raiz de la masa atómica). De ahí se saco la masa que había en el teórico!
+
+    El código de fonones cover gran variedad de sistemas y métodos: ver listado.
+
+\subsection{Ex 1a}
+
+  Nonpolar material (silicon).
+
+  Debemos resolver un sistema lineal que nos permite derivar primera de las funciones de onda. Pero a la derecha había otra cosa. Clave: los orbitales KS de ground state. Por eso es que necesitamos correr primero el pw.x.
+
+  Input de ph.x: al final se pone el vector de onda particular que se quiera calcular. Vemos que el umbral es bajísimo: es una derivada segunda! (a la -14).
+
+  La matriz dinámica se guarda en fildyn, que es lo que después se va a usar.
+
+  ph.x output: como en la Si tenemos dos átomos en la elda unidad, tendremos 6 modos fonónicos. Se resuelven a tres por simetría. (de a 3 mods). Cuando ddv_scf^2 es menor que le umbral que dimos en el input, se considera alcanzada la convergencia. Luego de la convergencia se encuentran las frecuencias.
+
+  Vemos que hay 3 freq neg: indican que el cuadrado de la freq es negativa. Se tienen frecuencias imaginarias. Sería un signo de inestabilidad.
+
+  Se pede ver que en este caso justo corresponde a ruido numérico, porque son negativas, pero muy cercanas a cero. (ver la presentación).
+
+  Los modos acusticos en gamma deberían ser necesariamente nulos. Debido a que la freq fononica está dada por diferenias en energía originadas por la distorsion fononica. (algo mas). Como los modos acusticos en gamma son traslaciones rígidas. Por la invariancia traslacional, la energía del sistema es invariante y por eso la freq es nula.
+
+  Habla de la regla de la suma acustica. Hay una condicion de la invarianza traslacional. Esta condicion no es impuesta por deefault. Este cero  pero no ser un cero en términos numéricos.
+
+  El dynmat.x viene a corregir esto me parece que entendi. revisar. Esto impone la suma del gammma de no se quien.
+
+  El dynmat.out contiene las freq de la matriz dinámica corregida. Ahora lo que es cero, realmente es cero.
+
+  Los otros 3 modos son los modos ópticos.
+
+  Por qué no se hace automáticamente? no hay por qué. En realidad es una cuestión de cálculo del R-espacio.
+
+
+  You inspect the phonon dispersion and check if you have negative frequencies. There can be two reasons: 1) physical - the system is dynamically unstable, 2) numerical - your results are not converged
+
+
+\subsection{Ex 1b}
+
+  Interpolación de Fourier. Permite interpretar como la smooth fonoo dispersion es calculada en el QE.
+
+  En vez de calcular punto a punto (muy caro sobre todo si nos vamos fuera de gamma por la pérdida de simetrías). Lo que se hace es una técnica de interpolación. Se calcula en una coarse k-mesh.
+
+  Se llama de Fourier porque la interpolación necesita ir y volver entre espacios duales. Hacemos la FT de la matriz dinámica con una k-mesh gruesa. Esto nos da una idea de la interatomic force constanst sobre todo el espacio real. Luego hacemos una FT de regreso, pero podemos pedir el punto que se nos cante: tener 10 puntos de inicio y después pedirle 100. No importa la simetría.
+
+  Los nuevos puntos estána a lo largo de las líneas de alta simetría.
+
+  q2r.x hace la transformacion de ida hacia el real y matdyn.x nos trae de vuelta al recíproco. En este aso la ida era sobre 8 puntos, pero la vuelta es de 396.
+
+  ldisp = .true.,
+  7   nq1 = 4,
+  8   nq2 = 4,
+  9   nq3 = 4,
+
+  le dice que queremos una dispersion fononica con una mesh 4x4x4.
+
+    ph.si.out vemos que hace todo el cálculo de antes pero para cada uno de los 8 puntos de la mesh (cuales 8?)
+
+  En los Si.dyn se tiene la matriz dinamica para cada uno de los puntos.
+
+  Cómo saber que estamos usando una grilla gruesa lo suficientemente fina? Hacer pruebas. Corroborar visualmente si hay cambios muy graves. Comparar 2x2x2 4x4x4 6x6x6 8x8x8. Hacer plotban para cada grilla. Incluir lo que falta.
+
+  Otra manera es hacer un cálculo directo. Como es una interpolación, se puede hacer una single q vector calculation. Calcular algunitos y ver que caigan sobre la curva generada con la mesh dada.
+
+  Cualquiera de las dos va a andas bien.
+
+  Hw2: ver filmina.
+
+  Phonon mode visualizer: ver filmina. Lee directamente el input del pw y el ouput "matdyn.modes". Tocas interactivamente los modos fonónicos y te muestra cómo se van moviendo. También podes ver la celdad unidad para entedner cómo el desplazamiento fonónico son modulados por el q vector.
+
+  Ver cuando la interpolación ya no funciona tan bien (filmina).
+
+  IFC Interatomic Force Constants.
+
+\subsection{Ex 2a}
+
+  Aislantes polares: aparece una contribución no analítica. Hay dos valores que neceisto Z epsilon. debo caluclar con campo elecrico.
+
+  input del ph.x
+  epsil = .true.
+ hace el calculo con el campo eéctirco eso que hace falta
+
+  todavía no le pusimos la parte del polar insulatro. Sólo esamos calculando un aparte (Ver cual era). No aparecen las separaciones LO-TO: las 3 freq opticas están degeneradas dada la simetría del sistema. Cuadno se incluye le termino no analitico, aparece spliting. (efecto stark?)
+
+  dynmat ahora le especificamos los vecotres que sacamos (las que no están en la parte analitica). Al no ser analitica debemos decirle a direccion d aproximacion.
+  q(1) = 1.0,
+  7     q(2) = 0.0,
+  8     q(3) = 0.0
+
+  Vemos que despues de esto se levanta la degeneración: LO-TO splitting se llama esto.
+
+\subsection{Ex 2b}
+
+  Faltan cosas en todos los inputs. Están comentadas las líneas faltantes. Tratar de hacerlo solitos Bb. Análogo al 1b.
+
+  Al acercarnos a gamma tenemos el splitting LO-TO.
+
+\subsection{Ex 3}
+
+  Hacer el ex3 solos tambien
+
+  No trabaja con 20 procesores. Sí trabaja con 8.
+
+
+  ver los libros sugeridos. Uno es el cenizas para lo general y otro es de FOx para lo de la separacion LO-TO.
+
+----
+
+La carpeta que borre que "estaba vacía" en relidad tenía archivos ocultos!! son las configuraciones y gilada que robe de la VM.
+
+
+
+
+__________________________
