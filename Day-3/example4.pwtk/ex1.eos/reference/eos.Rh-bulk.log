@@ -1,0 +1,431 @@
+      ========================================================================
+      *** PWTK-1.0.3    (PWscf ToolKit: a Tcl scripting environment)
+      ========================================================================
+      (for more info about PWTK, see http://pwtk.ijs.si/)
+
+      Running on host: qe2021
+      PWTK: /opt/pwtk-1.0.3
+      Date: Tue 27 Apr 2021 10:00:26 AM CEST
+      PID:  22445
+
+
+ EOS> ======================================================================
+ EOS> *** Search for an optimum A-lattice parameter (for cubic and hcp systems)
+ EOS> ======================================================================
+
+ EOS>   ibrav                =  2 (lattice-type: fcc)
+ EOS>   mode                 =  auto
+ EOS>   number of points     =  15
+ EOS>   use estimator points =  false
+ EOS>   use stress           =  true
+ EOS>   initial a0           =  7.292 bohr
+ EOS>   initial B0           =  550 kbar
+ EOS>   scale_min            =  0.96
+ EOS>   scale_max            =  1.04
+ EOS>   pw.x input/output files will be stored in eos.Rh-bulk.d/ subdirectory
+
+      Guessing the position of minimum: performing two point calculation.
+
+      * calculating estimator point #.1 :  a =   7.292 bohr
+
+      INFO: ntyp and number of atomic species specified in ATOMIC_SPECIES card
+            are not equal; filtering out unused atomic species
+
+      Executable: /usr/bin/pw.x
+      Running: pw.x -in eos.Rh-bulk.d/eos.Rh-bulk.estimator-1.in > eos.Rh-bulk.d/eos.Rh-bulk.estimator-1.out
+
+
+      * E(tot) = -52.03634945 ryd
+      * P      = -13.73 kbar
+
+
+      * calculating estimator point #.2 :  a =   6.563 bohr
+
+      INFO: ntyp and number of atomic species specified in ATOMIC_SPECIES card
+            are not equal; filtering out unused atomic species
+
+      Executable: /usr/bin/pw.x
+      Running: pw.x -in eos.Rh-bulk.d/eos.Rh-bulk.estimator-2.in > eos.Rh-bulk.d/eos.Rh-bulk.estimator-2.out
+
+
+      * E(tot) = -51.91580420 ryd
+      * P      = 1841.53 kbar
+
+      Two-point estimate:
+         two-point estimation of lattice-parameter :  a  =    7.28 bohr
+         two-point estimation of bulk-modulus      :  B0 = 3257.68 kbar
+
+      Performing 15-points calculation ...
+         lattice-parameter range     :  [  6.990,   7.573] bohr
+         lattice-parameter increment :    0.042 bohr
+
+      Calculating 1. point ...
+
+      INFO: ntyp and number of atomic species specified in ATOMIC_SPECIES card
+            are not equal; filtering out unused atomic species
+
+      Executable: /usr/bin/pw.x
+      Running: pw.x -in eos.Rh-bulk.d/eos.Rh-bulk.1.in > eos.Rh-bulk.d/eos.Rh-bulk.1.out
+
+
+      * a      =   6.990 bohr
+      * E(tot) = -52.02053897 ryd
+
+      Calculating 2. point ...
+
+      INFO: ntyp and number of atomic species specified in ATOMIC_SPECIES card
+            are not equal; filtering out unused atomic species
+
+      Executable: /usr/bin/pw.x
+      Running: pw.x -in eos.Rh-bulk.d/eos.Rh-bulk.2.in > eos.Rh-bulk.d/eos.Rh-bulk.2.out
+
+
+      * a      =   7.032 bohr
+      * E(tot) = -52.02489300 ryd
+
+      Calculating 3. point ...
+
+      INFO: ntyp and number of atomic species specified in ATOMIC_SPECIES card
+            are not equal; filtering out unused atomic species
+
+      Executable: /usr/bin/pw.x
+      Running: pw.x -in eos.Rh-bulk.d/eos.Rh-bulk.3.in > eos.Rh-bulk.d/eos.Rh-bulk.3.out
+
+
+      * a      =   7.074 bohr
+      * E(tot) = -52.02841631 ryd
+
+      Calculating 4. point ...
+
+      INFO: ntyp and number of atomic species specified in ATOMIC_SPECIES card
+            are not equal; filtering out unused atomic species
+
+      Executable: /usr/bin/pw.x
+      Running: pw.x -in eos.Rh-bulk.d/eos.Rh-bulk.4.in > eos.Rh-bulk.d/eos.Rh-bulk.4.out
+
+
+      * a      =   7.115 bohr
+      * E(tot) = -52.03128532 ryd
+
+      Calculating 5. point ...
+
+      INFO: ntyp and number of atomic species specified in ATOMIC_SPECIES card
+            are not equal; filtering out unused atomic species
+
+      Executable: /usr/bin/pw.x
+      Running: pw.x -in eos.Rh-bulk.d/eos.Rh-bulk.5.in > eos.Rh-bulk.d/eos.Rh-bulk.5.out
+
+
+      * a      =   7.157 bohr
+      * E(tot) = -52.03346187 ryd
+
+      Calculating 6. point ...
+
+      INFO: ntyp and number of atomic species specified in ATOMIC_SPECIES card
+            are not equal; filtering out unused atomic species
+
+      Executable: /usr/bin/pw.x
+      Running: pw.x -in eos.Rh-bulk.d/eos.Rh-bulk.6.in > eos.Rh-bulk.d/eos.Rh-bulk.6.out
+
+
+      * a      =   7.198 bohr
+      * E(tot) = -52.03499746 ryd
+
+      Calculating 7. point ...
+
+      INFO: ntyp and number of atomic species specified in ATOMIC_SPECIES card
+            are not equal; filtering out unused atomic species
+
+      Executable: /usr/bin/pw.x
+      Running: pw.x -in eos.Rh-bulk.d/eos.Rh-bulk.7.in > eos.Rh-bulk.d/eos.Rh-bulk.7.out
+
+
+      * a      =   7.240 bohr
+      * E(tot) = -52.03594827 ryd
+
+      Calculating 8. point ...
+
+      INFO: ntyp and number of atomic species specified in ATOMIC_SPECIES card
+            are not equal; filtering out unused atomic species
+
+      Executable: /usr/bin/pw.x
+      Running: pw.x -in eos.Rh-bulk.d/eos.Rh-bulk.8.in > eos.Rh-bulk.d/eos.Rh-bulk.8.out
+
+
+      * a      =   7.282 bohr
+      * E(tot) = -52.03635963 ryd
+
+      Calculating 9. point ...
+
+      INFO: ntyp and number of atomic species specified in ATOMIC_SPECIES card
+            are not equal; filtering out unused atomic species
+
+      Executable: /usr/bin/pw.x
+      Running: pw.x -in eos.Rh-bulk.d/eos.Rh-bulk.9.in > eos.Rh-bulk.d/eos.Rh-bulk.9.out
+
+
+      * a      =   7.323 bohr
+      * E(tot) = -52.03624032 ryd
+
+      Calculating 10. point ...
+
+      INFO: ntyp and number of atomic species specified in ATOMIC_SPECIES card
+            are not equal; filtering out unused atomic species
+
+      Executable: /usr/bin/pw.x
+      Running: pw.x -in eos.Rh-bulk.d/eos.Rh-bulk.10.in > eos.Rh-bulk.d/eos.Rh-bulk.10.out
+
+
+      * a      =   7.365 bohr
+      * E(tot) = -52.03566218 ryd
+
+      Calculating 11. point ...
+
+      INFO: ntyp and number of atomic species specified in ATOMIC_SPECIES card
+            are not equal; filtering out unused atomic species
+
+      Executable: /usr/bin/pw.x
+      Running: pw.x -in eos.Rh-bulk.d/eos.Rh-bulk.11.in > eos.Rh-bulk.d/eos.Rh-bulk.11.out
+
+
+      * a      =   7.407 bohr
+      * E(tot) = -52.03461895 ryd
+
+      Calculating 12. point ...
+
+      INFO: ntyp and number of atomic species specified in ATOMIC_SPECIES card
+            are not equal; filtering out unused atomic species
+
+      Executable: /usr/bin/pw.x
+      Running: pw.x -in eos.Rh-bulk.d/eos.Rh-bulk.12.in > eos.Rh-bulk.d/eos.Rh-bulk.12.out
+
+
+      * a      =   7.448 bohr
+      * E(tot) = -52.03319605 ryd
+
+      Calculating 13. point ...
+
+      INFO: ntyp and number of atomic species specified in ATOMIC_SPECIES card
+            are not equal; filtering out unused atomic species
+
+      Executable: /usr/bin/pw.x
+      Running: pw.x -in eos.Rh-bulk.d/eos.Rh-bulk.13.in > eos.Rh-bulk.d/eos.Rh-bulk.13.out
+
+
+      * a      =   7.490 bohr
+      * E(tot) = -52.03143235 ryd
+
+      Calculating 14. point ...
+
+      INFO: ntyp and number of atomic species specified in ATOMIC_SPECIES card
+            are not equal; filtering out unused atomic species
+
+      Executable: /usr/bin/pw.x
+      Running: pw.x -in eos.Rh-bulk.d/eos.Rh-bulk.14.in > eos.Rh-bulk.d/eos.Rh-bulk.14.out
+
+
+      * a      =   7.531 bohr
+      * E(tot) = -52.02929769 ryd
+
+      Calculating 15. point ...
+
+      INFO: ntyp and number of atomic species specified in ATOMIC_SPECIES card
+            are not equal; filtering out unused atomic species
+
+      Executable: /usr/bin/pw.x
+      Running: pw.x -in eos.Rh-bulk.d/eos.Rh-bulk.15.in > eos.Rh-bulk.d/eos.Rh-bulk.15.out
+
+
+      * a      =   7.573 bohr
+      * E(tot) = -52.02683418 ryd
+
+      Summary of the calculated lattice-parameter data points:
+
+      #   a/bohr       V/bohr          E(tot)/ryd
+          6.99042       341.59353       -52.020539
+          7.03203       347.72980       -52.024893
+          7.07364       353.93911       -52.028416
+          7.11525       360.22191       -52.031285
+          7.15686       366.57862       -52.033462
+          7.19847       373.00968       -52.034997
+          7.24008       379.51552       -52.035948
+          7.28169       386.09657       -52.036360
+          7.32330       392.75326       -52.036240
+          7.36491       399.48603       -52.035662
+          7.40652       406.29530       -52.034619
+          7.44813       413.18152       -52.033196
+          7.48973       420.14511       -52.031432
+          7.53134       427.18650       -52.029298
+          7.57295       434.30613       -52.026834
+
+      Data-points written to file:  eos.Rh-bulk.d/eos.Rh-bulk.dat
+
+      Executable: /usr/bin/ev.x
+      Running: ev.x < eos.Rh-bulk.d/eos.Rh-bulk.birch1.1-15.ev.in > eos.Rh-bulk.d/eos.Rh-bulk.birch1.1-15.ev.out
+
+      Executable: /usr/bin/ev.x
+      Running: ev.x < eos.Rh-bulk.d/eos.Rh-bulk.birch2.1-15.ev.in > eos.Rh-bulk.d/eos.Rh-bulk.birch2.1-15.ev.out
+
+      Executable: /usr/bin/ev.x
+      Running: ev.x < eos.Rh-bulk.d/eos.Rh-bulk.keane.1-15.ev.in > eos.Rh-bulk.d/eos.Rh-bulk.keane.1-15.ev.out
+
+      Executable: /usr/bin/ev.x
+      Running: ev.x < eos.Rh-bulk.d/eos.Rh-bulk.murnaghan.1-15.ev.in > eos.Rh-bulk.d/eos.Rh-bulk.murnaghan.1-15.ev.out
+
+      Executable: /usr/bin/ev.x
+      Running: ev.x < eos.Rh-bulk.d/eos.Rh-bulk.birch1.1-14.ev.in > eos.Rh-bulk.d/eos.Rh-bulk.birch1.1-14.ev.out
+
+      Executable: /usr/bin/ev.x
+      Running: ev.x < eos.Rh-bulk.d/eos.Rh-bulk.birch2.1-14.ev.in > eos.Rh-bulk.d/eos.Rh-bulk.birch2.1-14.ev.out
+
+      Executable: /usr/bin/ev.x
+      Running: ev.x < eos.Rh-bulk.d/eos.Rh-bulk.keane.1-14.ev.in > eos.Rh-bulk.d/eos.Rh-bulk.keane.1-14.ev.out
+
+      Executable: /usr/bin/ev.x
+      Running: ev.x < eos.Rh-bulk.d/eos.Rh-bulk.murnaghan.1-14.ev.in > eos.Rh-bulk.d/eos.Rh-bulk.murnaghan.1-14.ev.out
+
+      Executable: /usr/bin/ev.x
+      Running: ev.x < eos.Rh-bulk.d/eos.Rh-bulk.birch1.2-14.ev.in > eos.Rh-bulk.d/eos.Rh-bulk.birch1.2-14.ev.out
+
+      Executable: /usr/bin/ev.x
+      Running: ev.x < eos.Rh-bulk.d/eos.Rh-bulk.birch2.2-14.ev.in > eos.Rh-bulk.d/eos.Rh-bulk.birch2.2-14.ev.out
+
+      Executable: /usr/bin/ev.x
+      Running: ev.x < eos.Rh-bulk.d/eos.Rh-bulk.keane.2-14.ev.in > eos.Rh-bulk.d/eos.Rh-bulk.keane.2-14.ev.out
+
+      Executable: /usr/bin/ev.x
+      Running: ev.x < eos.Rh-bulk.d/eos.Rh-bulk.murnaghan.2-14.ev.in > eos.Rh-bulk.d/eos.Rh-bulk.murnaghan.2-14.ev.out
+
+      Executable: /usr/bin/ev.x
+      Running: ev.x < eos.Rh-bulk.d/eos.Rh-bulk.birch1.2-13.ev.in > eos.Rh-bulk.d/eos.Rh-bulk.birch1.2-13.ev.out
+
+      Executable: /usr/bin/ev.x
+      Running: ev.x < eos.Rh-bulk.d/eos.Rh-bulk.birch2.2-13.ev.in > eos.Rh-bulk.d/eos.Rh-bulk.birch2.2-13.ev.out
+
+      Executable: /usr/bin/ev.x
+      Running: ev.x < eos.Rh-bulk.d/eos.Rh-bulk.keane.2-13.ev.in > eos.Rh-bulk.d/eos.Rh-bulk.keane.2-13.ev.out
+
+      Executable: /usr/bin/ev.x
+      Running: ev.x < eos.Rh-bulk.d/eos.Rh-bulk.murnaghan.2-13.ev.in > eos.Rh-bulk.d/eos.Rh-bulk.murnaghan.2-13.ev.out
+
+      Executable: /usr/bin/ev.x
+      Running: ev.x < eos.Rh-bulk.d/eos.Rh-bulk.birch1.3-13.ev.in > eos.Rh-bulk.d/eos.Rh-bulk.birch1.3-13.ev.out
+
+      Executable: /usr/bin/ev.x
+      Running: ev.x < eos.Rh-bulk.d/eos.Rh-bulk.birch2.3-13.ev.in > eos.Rh-bulk.d/eos.Rh-bulk.birch2.3-13.ev.out
+
+      Executable: /usr/bin/ev.x
+      Running: ev.x < eos.Rh-bulk.d/eos.Rh-bulk.keane.3-13.ev.in > eos.Rh-bulk.d/eos.Rh-bulk.keane.3-13.ev.out
+
+      Executable: /usr/bin/ev.x
+      Running: ev.x < eos.Rh-bulk.d/eos.Rh-bulk.murnaghan.3-13.ev.in > eos.Rh-bulk.d/eos.Rh-bulk.murnaghan.3-13.ev.out
+
+      Executable: /usr/bin/ev.x
+      Running: ev.x < eos.Rh-bulk.d/eos.Rh-bulk.birch1.3-12.ev.in > eos.Rh-bulk.d/eos.Rh-bulk.birch1.3-12.ev.out
+
+      Executable: /usr/bin/ev.x
+      Running: ev.x < eos.Rh-bulk.d/eos.Rh-bulk.birch2.3-12.ev.in > eos.Rh-bulk.d/eos.Rh-bulk.birch2.3-12.ev.out
+
+      Executable: /usr/bin/ev.x
+      Running: ev.x < eos.Rh-bulk.d/eos.Rh-bulk.keane.3-12.ev.in > eos.Rh-bulk.d/eos.Rh-bulk.keane.3-12.ev.out
+
+      Executable: /usr/bin/ev.x
+      Running: ev.x < eos.Rh-bulk.d/eos.Rh-bulk.murnaghan.3-12.ev.in > eos.Rh-bulk.d/eos.Rh-bulk.murnaghan.3-12.ev.out
+
+      Executable: /usr/bin/ev.x
+      Running: ev.x < eos.Rh-bulk.d/eos.Rh-bulk.birch1.4-12.ev.in > eos.Rh-bulk.d/eos.Rh-bulk.birch1.4-12.ev.out
+
+      Executable: /usr/bin/ev.x
+      Running: ev.x < eos.Rh-bulk.d/eos.Rh-bulk.birch2.4-12.ev.in > eos.Rh-bulk.d/eos.Rh-bulk.birch2.4-12.ev.out
+
+      Executable: /usr/bin/ev.x
+      Running: ev.x < eos.Rh-bulk.d/eos.Rh-bulk.keane.4-12.ev.in > eos.Rh-bulk.d/eos.Rh-bulk.keane.4-12.ev.out
+
+      Executable: /usr/bin/ev.x
+      Running: ev.x < eos.Rh-bulk.d/eos.Rh-bulk.murnaghan.4-12.ev.in > eos.Rh-bulk.d/eos.Rh-bulk.murnaghan.4-12.ev.out
+
+      Executable: /usr/bin/ev.x
+      Running: ev.x < eos.Rh-bulk.d/eos.Rh-bulk.birch1.4-11.ev.in > eos.Rh-bulk.d/eos.Rh-bulk.birch1.4-11.ev.out
+
+      Executable: /usr/bin/ev.x
+      Running: ev.x < eos.Rh-bulk.d/eos.Rh-bulk.birch2.4-11.ev.in > eos.Rh-bulk.d/eos.Rh-bulk.birch2.4-11.ev.out
+
+      Executable: /usr/bin/ev.x
+      Running: ev.x < eos.Rh-bulk.d/eos.Rh-bulk.keane.4-11.ev.in > eos.Rh-bulk.d/eos.Rh-bulk.keane.4-11.ev.out
+
+      Executable: /usr/bin/ev.x
+      Running: ev.x < eos.Rh-bulk.d/eos.Rh-bulk.murnaghan.4-11.ev.in > eos.Rh-bulk.d/eos.Rh-bulk.murnaghan.4-11.ev.out
+
+      Executable: /usr/bin/ev.x
+      Running: ev.x < eos.Rh-bulk.d/eos.Rh-bulk.birch1.5-11.ev.in > eos.Rh-bulk.d/eos.Rh-bulk.birch1.5-11.ev.out
+
+      Executable: /usr/bin/ev.x
+      Running: ev.x < eos.Rh-bulk.d/eos.Rh-bulk.birch2.5-11.ev.in > eos.Rh-bulk.d/eos.Rh-bulk.birch2.5-11.ev.out
+
+      Executable: /usr/bin/ev.x
+      Running: ev.x < eos.Rh-bulk.d/eos.Rh-bulk.keane.5-11.ev.in > eos.Rh-bulk.d/eos.Rh-bulk.keane.5-11.ev.out
+
+      Executable: /usr/bin/ev.x
+      Running: ev.x < eos.Rh-bulk.d/eos.Rh-bulk.murnaghan.5-11.ev.in > eos.Rh-bulk.d/eos.Rh-bulk.murnaghan.5-11.ev.out
+
+
+      FINAL RESULTS::
+      ---------------
+
+        Lattice type:  fcc
+
+        OPTIMISED LATTICE PARAMETER, a0 (in Bohr units)::
+
+        ------------+------------+------------+------------+-----------
+         # points   | MURNAGHAN  | BIRCH O(1) | BIRCH O(2) |    KEANE  
+        ------------+------------+------------+------------+-----------
+         15:  1--15 |     7.294  |     7.293  |     7.293  |     7.293 
+         14:  1--14 |     7.294  |     7.293  |     7.293  |     7.293 
+         13:  2--14 |     7.293  |     7.293  |     7.293  |     7.293 
+         12:  2--13 |     7.294  |     7.293  |     7.293  |     7.294 
+         11:  3--13 |     7.293  |     7.293  |     7.293  |     7.293 
+         10:  3--12 |     7.293  |     7.293  |     7.293  |     7.293 
+          9:  4--12 |     7.293  |     7.293  |     7.293  |     7.293 
+          8:  4--11 |     7.293  |     7.293  |     7.293  |     7.293 
+          7:  5--11 |     7.293  |     7.293  |     7.293  |     7.293 
+        ------------+------------+------------+------------+-----------
+
+        OPTIMISED Total Energy, E0 (in Ryd units)::
+
+        ------------+------------+------------+------------+-----------
+         # points   | MURNAGHAN  | BIRCH O(1) | BIRCH O(2) |    KEANE  
+        ------------+------------+------------+------------+-----------
+         15:  1--15 |   -52.0363 |   -52.0364 |   -52.0364 |   -52.0364 
+         14:  1--14 |   -52.0363 |   -52.0364 |   -52.0364 |   -52.0364 
+         13:  2--14 |   -52.0364 |   -52.0364 |   -52.0364 |   -52.0364 
+         12:  2--13 |   -52.0364 |   -52.0364 |   -52.0364 |   -52.0364 
+         11:  3--13 |   -52.0364 |   -52.0364 |   -52.0364 |   -52.0364 
+         10:  3--12 |   -52.0364 |   -52.0364 |   -52.0364 |   -52.0364 
+          9:  4--12 |   -52.0364 |   -52.0364 |   -52.0361 |   -52.0364 
+          8:  4--11 |   -52.0364 |   -52.0364 |   -52.0364 |   -52.0364 
+          7:  5--11 |   -52.0364 |   -52.0364 |   -52.0364 |   -52.0364 
+        ------------+------------+------------+------------+-----------
+
+        OPTIMISED Bulk Modules, B0 (in kbar units)::
+
+        ------------+------------+------------+------------+-----------
+         # points   | MURNAGHAN  | BIRCH O(1) | BIRCH O(2) |    KEANE  
+        ------------+------------+------------+------------+-----------
+         15:  1--15 |    2550    |    2570    |    2591    |    7788 
+         14:  1--14 |    2557    |    2571    |    2597    |   12025 
+         13:  2--14 |    2557    |    2572    |    2609    |   20934 
+         12:  2--13 |    2568    |    2578    |    2616    |    2564 
+         11:  3--13 |    2569    |    2581    |    2604    |   16080 
+         10:  3--12 |    2587    |    2594    |    2593    |    2370 
+          9:  4--12 |    2587    |    2594    |    1345    |    2465 
+          8:  4--11 |    2602    |    2606    |    2594    |    1518 
+          7:  5--11 |    2603    |    2606    |    2608    |    1483 
+        ------------+------------+------------+------------+-----------
+
+
+
+      Result written to file eos.Rh-bulk.d/eos.Rh-bulk.RESULTS
+
+
+      Job done.
+      --
