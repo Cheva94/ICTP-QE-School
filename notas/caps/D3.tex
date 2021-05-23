@@ -749,10 +749,82 @@ Yes. In the input on neb, you have to enter the common lattice parameter.
 \subsubsection{Pasos: CO@Rh(100)}
 
   \begin{enumerate}
-    \item
+    \item Ejecutar todo. Necesitamos 8 procesadores ya que una de las etapas es calcular la molécula de CO aislada y con más procesadores se crashea.
       \begin{verbatim}
-
+        NPROC=8 remote_pwtk run-all.pwtk
       \end{verbatim}
+    \item Traer lo relevante.
+    \begin{verbatim}
+      rsync_from_hpc *.in *.out *.xsf *pdos*
+    \end{verbatim}
   \end{enumerate}
 
+  Para visualizar todo:
+    \begin{enumerate}
+      \item Ver PDOS y MOPDOS. Setear antes la energía de Fermi en $moproj.gp$.
+      \begin{verbatim}
+        grep Fermi pw.CO-Rh100.nscf.out
+        gnuplot moproj.gp
+      \end{verbatim}
+      \item Los MO se escriben en $psi2.CO_K*_B*.xsf$. Verlos de a uno o todos juntos.
+      \begin{verbatim}
+        xcrysden -r 0 --xsf psi2.CO_K001_B005.xsf
+        ./plot-psi2.sh
+      \end{verbatim}
+      \item Los ILDOS estan en $ildos_*.xsf$. Verlos de a uno o todos juntos.
+      \begin{verbatim}
+        xcrysden -r 2 --xsf ildos_-3.05_-2.95.xsf
+        ./plot-ildos.sh
+      \end{verbatim}
+      \item La DIFDEN está en $difden.CO-Rh100.xsf$. Ver con
+      \begin{verbatim}
+        xcrysden -r 2 --xsf difden.CO-Rh100.xsf
+      \end{verbatim}
+    \end{enumerate}
+
 \subsubsection{Resultados: CO@Rh(100)}
+
+  Vamos a analizar el enlace de CO sobre Rh(100) mediante varias técnicas: charge-density difference (DIFDEN), density-of-states projected (PDOS) to atomic orbitals, density-of-states projected to molecular orbitals (MOPDOS) y ILDOS (integrated-local density of states).
+
+  Los scripts son:
+    \begin{itemize}
+      \item \textbf{common-data.pwtk:} input data común a todos los cálculos.
+      \item \textbf{run-all.pwtk:} importa los demás scripts y hace los cálculos.
+      \item \textbf{relax.pwtk:} relajación de la estrucutura de Co-Rh(100).
+      \item \textbf{difden.pwtk:} calculo de la diferencia de densidad de carga. Esta es una utility de PWTk que ayuda a hacer cálculos de diferencias, no sólo la de densidad de carga. En el caso particular que buscamos para resolver $\Delta\rho_{AB} = \rho_{AB} - \rho_A - \rho_B$ necesitamos 7 cálculos: una SCF (pw.x) y una densida de carga (pp.x) para AB, A y B más un pp.x extra que hace la diferencia. Este script lleva a cabo todos los 7 cálculos.
+      \item \textbf{ildos.pwtk:} calculo de la ILDOS.
+      \begin{figure}[H]
+          \centering
+          \subfigure[]{\includegraphics[scale = 0.5]{figs/D3/ILDOS.png}}
+          \subfigure[]{\includegraphics[scale = 0.5]{figs/D3/ILDOSs.png}}
+          \caption{Representación de ILDOS.}
+      \end{figure}
+      \item \textbf{pdos.pwtk:} cálculo de la PDOS y la MOPDOS. Además plotear los MO de Co.
+    \end{itemize}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale = 0.5]{figs/D3/CO_DOS.png}
+        \caption{PDOS y MOPDOS.}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale = 0.5]{figs/D3/psi2-montage.png}
+        \caption{MO de CO.}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale = 0.5]{figs/D3/ildos-montage.png}
+        \caption{ILDOS.}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale = 0.5]{figs/D3/CO_DIFDEN.png}
+        \caption{ILDOS.}
+    \end{figure}
+
+
+    Se observa la donación de carga del $\sigma$-HOMO del CO a los estados metálicos y, luego, la donación vuelve hacia el $\pi^*$-LUMO del CO.
