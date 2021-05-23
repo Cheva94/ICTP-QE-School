@@ -689,36 +689,62 @@ Yes. In the input on neb, you have to enter the common lattice parameter.
         pwtk eos.Rh-bulk.pwtk > eos.Rh-bulk.log &
       \end{verbatim}
     \item Leer el archivo de salida 'eos.Rh-bulk.log'. Los resultados finales están en 'eos.Rh-bulk.RESULTS'.
-    \item Notar que el módulo de Young es más sensible al muestreo de datos que al parámetro de red y la energía de equilibrio total. ¿Por qué?
   \end{enumerate}
 
 \subsubsection{Resultados: EOS}
 
+  Lo que estamos corriendo permite encontrar los valores óptimos del parámetro de red para sistemas cúbicos o hcp. Se hacen 15 cálculos del tipo sCF con diferentes parámetros de red. Usa una guess inicial como input y estos resultados son el input de ev.x para calcular la EOS.
 
+  Notamos que el módulo de Young es más sensible al muestreo de datos que al parámetro de red y la energía de equilibrio total.
 
-
-
-
-
-
-
-
-
-
-
-
-
+  \begin{figure}[H]
+      \centering
+      \subfigure[]{\includegraphics[scale = 0.35]{figs/D3/eos_etot.png}}
+      \subfigure[]{\includegraphics[scale = 0.35]{figs/D3/eos_alat.png}}
+      \subfigure[]{\includegraphics[scale = 0.35]{figs/D3/eos_young.png}}
+      \caption{Resultado de EOS en Rh bulk.}
+  \end{figure}
 
 \subsubsection{Pasos: O@Al(111)}
 
+  Mediante el estudio de una PES bidimensional se pretende introducir el conecpt de input data stacking en PWTK (input\_pushpop { ... }).
   \begin{enumerate}
-    \item
+    \item Ejecutar.
       \begin{verbatim}
-
+        remote_pwtk scan.pwtk
       \end{verbatim}
+    \item Ver la PES resultante.
+    \begin{verbatim}
+      gnuplot plot2D.gp
+    \end{verbatim}
+    \item Ejecutar tabulation para plotear automáticamente las estructuras de los outputs de las diferentes pw.x. Esto genera un archivo (tabulate.tex)
+    \begin{verbatim}
+      pwtk tabulate.pwtk
+      pdflatex tabulate.tex
+    \end{verbatim}
   \end{enumerate}
 
 \subsubsection{Resultados: O@Al(111)}
+
+  En cada iteración deberíamos agregar un nuevo átomo de oxígeno a la estructura. Sin embargo, al usar input data stacking, agregamos un oxígeno, hacemos el cálculo y luego quitamos dicho O. Dicho O queda fijo en su posición en el plano,  pero tiene libertad para moverse en $z$.
+
+  El concepto de input data stacking sirve cuando se hacen múltiples cálculos que poseen un set de parámetros en común y debemos ir haciendo pequeñas modificaciones, pero no secuenciales: cada corrida debe ser independiente del estado final de la corrida anterior. Para lograr esto se usa $inpu\_push$ y $inpu\_pop$ (o directametne $inpu\_pushpop$).
+
+    \includegraphics[scale = 0.5]{figs/D3/pushpop.png}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale = 0.5]{figs/D3/PES_2D.png}
+        \caption{PES 2D para O@Al(111).}
+    \end{figure}
+
+  El resultado de la tabuación se puede ver en la siguiente figura.
+
+  \begin{figure}[H]
+      \centering
+      \includegraphics[scale = 0.5]{figs/D3/tabulate.png}
+      \caption{Ubicación de O respecto a la superficie de Al(111).}
+  \end{figure}
 
 \subsubsection{Pasos: CO@Rh(100)}
 
