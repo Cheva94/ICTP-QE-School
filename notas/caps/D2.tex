@@ -421,8 +421,6 @@
 
     A partir de los resultados de la ecuación de estado, notamos además que para parámetros de red menores al óptimo, la energía total es menor que la entalpía. Lo opuesto ocurre para parámetros de red mayores al óptimo.
 
-    Si uno analizara el cutoff para otros valores de $k$-mesh y $ecutwfc$ encontraría que las curvas de energía en función del parámetro de red se corren hacia valores más negativos de energía al aumentar el cutoff, pero no dependen tanto de los valores de la grilla de puntos k.
-
       \begin{figure}[H]
           \centering
           \includegraphics[scale = 0.6]{figs/D2/Si_alat.png}
@@ -442,6 +440,28 @@
         \includegraphics[scale = 0.6]{figs/D2/Si_bands.png}
         \caption{Estructura de bandas para Si bulk.}
     \end{figure}
+
+  Al analizar las curvas de energía total en función del parámetro de red para diferentes $k$-mesh y $ecutwfc$ vemos que:
+    \begin{itemize}
+      \item Para un mismo $ecutwfc$, la energía no es tan sensible al $k$-mesh: con 2x2x2 es muy mala la convergencia, pero ya con 4x4x4 se estabiliza.
+      \item A medida que aumentamos $ecutwfc$, las curvas se van desplazando hacia valores más negativos de energía.
+    \end{itemize}
+
+  Al comparar los $k$-mesh volvemos a elegir 4x4x4. Al comparar los mínimos, vemos que la elección de 24 Ry fue acertada.
+
+  \begin{figure}[H]
+      \centering
+      \subfigure[]{\includegraphics[scale = 0.55]{figs/D2/alat/12.png}}
+      \subfigure[]{\includegraphics[scale = 0.55]{figs/D2/alat/16.png}} \\
+      \subfigure[]{\includegraphics[scale = 0.55]{figs/D2/alat/20.png}}
+      \subfigure[]{\includegraphics[scale = 0.55]{figs/D2/alat/24.png}} \\
+      \subfigure[]{\includegraphics[scale = 0.55]{figs/D2/alat/28.png}}
+      \subfigure[]{\includegraphics[scale = 0.55]{figs/D2/alat/32.png}} \\
+      \subfigure[]{\includegraphics[scale = 0.55]{figs/D2/alat/36.png}}
+      \subfigure[]{\includegraphics[scale = 0.55]{figs/D2/alat/40.png}} \\
+      \caption{Energía en total en función del parámetro de red para diferentes cutoff y diferentes $k$-mesh.}
+  \end{figure}
+
 
 \subsection{Al}
 

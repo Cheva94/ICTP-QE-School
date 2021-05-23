@@ -670,35 +670,46 @@ Yes. In the input on neb, you have to enter the common lattice parameter.
 
 \subsubsection{Objetivo}
 
-  Se hacen diferentes pruebas con el fin de explorar las capacidades de PWTK.
+  Se hacen diferentes pruebas con el fin de explorar las capacidades de PWTK:
+    \begin{enumerate}
+      \item Cómo usar EOS (Equation of State) utility de PWTK: calcular EOS de Rh bulk.
+      \item Cómo correr varios cálculos con un script PWTK simple: calcular la PES bidimensional de las posiciones laterales de O @ Al(111).
+      \item Cómo ensamblar varios cálculos con PWTK: analizar enlace de CO sobre Rh(100).
+    \end{enumerate}
+
+    \Obs{Los parámetros son pobres con el fin de acelerar la convergencia. Todos los ejemplos importan el archivo common.pwtk donde se especifican el conjunto común da input data utilizado en todos los ejemplos: PP, cutoffs, smearing, etcétera.}
+
+\subsubsection{Pasos: EOS}
+
+  Para calcular la EOS de un sistema cúbico usando la EOS utility de PWTK:
+
+  \begin{enumerate}
+    \item Ejecutar
+      \begin{verbatim}
+        pwtk eos.Rh-bulk.pwtk > eos.Rh-bulk.log &
+      \end{verbatim}
+    \item Leer el archivo de salida 'eos.Rh-bulk.log'. Los resultados finales están en 'eos.Rh-bulk.RESULTS'.
+    \item Notar que el módulo de Young es más sensible al muestreo de datos que al parámetro de red y la energía de equilibrio total. ¿Por qué?
+  \end{enumerate}
+
+\subsubsection{Resultados: EOS}
 
 
-This exercise consists from three examples, in particular:
-
-* `ex1.eos/` -- how to use EOS utility of PWTK to calculate EOS of Rh bulk.
-
-* `ex2.O@Al111/` -- how to run many calculations with a relatively
-                    simple PWTK script; it calculates a 2D potential
-                    energy surface of lateral positions of O @ Al(111).
-                    It is also shown how one can automatically
-                    tabulate calculated structures with PWTK.
-
-* `ex3.CO@Rh100/` -- a more elaborate PWTK example that shows how to
-                     glue together various calculations. In particular,
-                     it analyzes the bonding of CO molecule on Rh(100).
 
 
-**REMARK:** all three examples imports the `./common.pwtk` file, which
-specifies the most common set of input data that is used by all
-examples, i.e., list of pseudo-potentials, energy cutoffs,
-smearing, ...
 
 
-**BEWARE:** the cutoffs and convergence thresholds and other parameters are
-very lousy as to speed-up calculations.
 
 
-\subsubsection{Pasos}
+
+
+
+
+
+
+
+
+\subsubsection{Pasos: O@Al(111)}
 
   \begin{enumerate}
     \item
@@ -707,4 +718,15 @@ very lousy as to speed-up calculations.
       \end{verbatim}
   \end{enumerate}
 
-\subsubsection{Resultados: pwtk automation}
+\subsubsection{Resultados: O@Al(111)}
+
+\subsubsection{Pasos: CO@Rh(100)}
+
+  \begin{enumerate}
+    \item
+      \begin{verbatim}
+
+      \end{verbatim}
+  \end{enumerate}
+
+\subsubsection{Resultados: CO@Rh(100)}
