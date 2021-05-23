@@ -1,298 +1,208 @@
-\subsection{ECX of DFT}
+\section{Teórico}
 
-  Funcionales de correlación-intercambio.
+  \definicion{Topic:} Advanced functionals: higher accuracy (hybrids), strongly correlated materials (DFT+U), weakly bound systems (van der Waals).
 
-  Los funcionales fueron creciendo en precisión, pero esto conlleva un incrementando en su complejidad (Escalera de Jacob de DFT)
+  \definicion{Speaker:} Stefano DE GIRONCOLI (SISSA, Italy).
 
-  Incluso los más sencillos tienen información acerca de la densidad de carga.
+\subsection{Funcionales en DFT: término XC}
 
-  Hoenberg Kohn
+  Existen diferencias generaciones o grupos de funcionales que van creciendo en precisión, pero esto conlleva un incremento en su complejidad (Fig. \ref{fig:jacob}): incluso el funcional más sencillo contiene información acerca de la densidad de carga del sistema.
 
-  Toda la primera parte es un repaso de la autoconsistencia y KS.
+  \begin{figure}[H]
+      \centering
+      \includegraphics[scale = 0.5]{figs/D4/Jacob.png}
+      \caption{Escalera de Jacob de las aproximaciones de DFT.}
+      \label{fig:jacob}
+  \end{figure}
 
-  El término de XC es pequeño relativo a los demás términos que contribuyen a la energía total del sistema. Aproximación más sencilla: LSDA (Local Spin Density Approximation).
+  Los teoremas de Hohenberg-Kohn (HK) están relacionados a cualquier sistema que consista de electrones moviéndose bajo la influencia de un potencial externo:
+    \begin{enumerate}
+      \item \textbf{Primer teorema HK:} el potencial externo y, en consecuencia, la energía total son un funcional único de la densidad electrónica. Luego, la densidad electrónica del estado fundamental describe de manera unívoca el potencial y, por lo tanto, todas las propiedades del sistema, incluyendo la función de onda many-body. Se sigue que el espectro del Hamiltoniano también es un funcional único de dicha densidad basal. Particularmente, el funcional HK es una función universal de la densidad electrónica, no dependiendo de manera explícita del potencial externo.
+        $$F[n] = T[n] + U[n]$$
+      \item \textbf{Segundo teorema HK:} El funcional permite determinar la energía del estado fundamental si y sólo si la densidad electrónica es la del estado fundamental.
+        $$F [n] = \underbrace{min}_{\Psi \rightarrow n} \bra{\Psi} T_e + W_{ee} \ket{\Psi}$$
+    \end{enumerate}
 
-  L(S)DA: hace un mapeo homogéneo. Describe una gran variedad de propiedades para un amplio abanico de materailes: energía, estabilidad de fases, defectos termodinámicos, geometrías de equilibrio, funciones respuesta a perturbaciones externas (constantes elásticas, dielecctricas, piezoelectricas). Si además consideramos la aproximación adiabática, la dinámia de la red es una propiedad del estado fundamenta: propiedades vibracionales y había dos más. También da buenas tendencias: primeras energías de ionización. Energías de transferencia s-d.
+  Se tiene entonces que para cualquier natural $N$ y potencial externo $v_{ext} (\vec{r})$ existe un funcional de desidad $F[n]$ tal que
+    $$E [n] = F[n] + \int v_{ext} (\vec{r}) n (\vec{r}) d\vec{r}$$
 
-  Conclusión: incluso la aproximación más sencilla da buenos resultados (razonables al menos y con tendencias adecuadas).
+  Partiendo de esta idea, KS plantean la energía cinética de un sistema ficticio de electrones no interactuantes.
+    $$T_s[n] = \underbrace{min}_{\Psi \rightarrow n} \bra{\Psi} T_e\ket{\Psi}$$
 
-  Quiebre: enlaces más cortos y más fuertes. También los módulos de Young suelen ser mayores (claramente). Los bandgaps son MUY chicos (esto es más una cosa a favor que en contra).
+  Con esta información se reescribe la ecuación de HK según del sistema interactuante según
+    $$F[n] = T_s[n] + E_{Har} [n] + E_{XC} [n]$$
+
+  Así la energía del sistema será
+    $$E [n] = T_s[n] + E_{Har} [n] + E_{XC} [n] + \int v_{ext} (\vec{r}) n (\vec{r}) d\vec{r}$$
+
+  Todo lo que quedó fuera al recurrir a este sistema no interactuante está contenido en el término XC. Este término es pequeño relativo a los demás términos que contribuyen a la energía total del sistema. Por este motivo es que incluso la aproximación más sencilla sigue siendo útil para los cálculos.
+
+\subsection{L(S)DA}
+
+  La aproximación más sencilla es Local (Spin) Density Approximation (L(S)DA), donde la "S" se pone según se esté considerando o no la contribución de spin. En este caso basta con conocer la densidad electrónica en cada punto del espacio.
+    $$E_{XC} = E_{XC} [n]$$
+
+  Asume que la densidad varía lentamente, tratando entonces a la densidad local como un gas homogéneo de electrones: el valor de la energía XC en una posición $\vec{r}$ se determina exclusivamente a partir del valor de la densidad en esa posición, \emph{i.e} el valor local de $n$.
+
+  A pesar de su sencillez, ofrece resultados bastante razonables para el estado fundamental. Describe una gran variedad de propiedades para un amplio abanico de materailes: energía, estabilidad de fases, defectos termodinámicos, geometrías de equilibrio, funciones respuesta, etcétera. Si, además, consideramos la aproximación adiabática, la dinámica de la red es una propiedad del estado fundamental: puedo determinar propiedades vibracionales, termidonámicas y defectos. En general se observan buenas tendencias respecto a los valores experimentales. También da buenas tendencias.
+
+  Las primeras limitantes son que da lugar a enlaces más cortos y más fuertes, dando en consecuencia módulos de Young mayores. Además los bandgaps son muy chicos.
+
+  \Obs{Cuánto mayor sea tasa de cambio de la densidad, menos confiables son los resultados cuando se usa LDA.}
+
+\subsection{GGA}
+
+  Esta familia de funcionales conocido como Generalized Gradient Approximation (GGA) requiere información del gradiente local de la densidad electrónica además de la propia densidad electrónica.
+    $$E_{XC} = E_{XC} [n, \nabla n]$$
+
+  En realidad se utiliza el gradiente reducido, dado por
+    $$\frac{\nabla n}{n^{\sfrac{4}{3}}}$$
+
+  La densidad decae exponencialmente, por lo que denominador provoca que este cociente sea divergente para $r$ grande. Esto hace que en la región de mayor probabilidad de encontrar electrones (en torno al núcleo), el gradiente sea pequeño y acotado. Sin embargo, al alejarnos del núcleo la densidad cae y el gradiente reducido diverge. Se tiene entonces que el funcional puede considerar dos regiones: una más externa o superficial y una más interna o cercana al núcleo. Esto permite una mucho mejor descripción del sistema.
+
+  El primero de este tipo fue PW91 (Perdew-Wang). Basándose en éste, simplificando las ideas, pero haciéndolas a su vez más potentes en sus resultados, surgió uno de los más usados: PBE (Perdew-Burke-Ernzerhof).
+
+  Estos resuelven el overbinding del LDA. Se acercan al valor real, pero siguen estando por encima en algunos casos. Aunque sus efectos en los parámetros de red son más aleatorios. De todas formas logra describir mucho mejor las estructuras cristalinas de los elementos. Además, GGA es importante para sistemas magnéticos, particularmente para el hierro: LDA dice que es no magnético, pero GGA logra describir que tiene propiedades magnéticas.
+
+  Los problemas que había con LDA y que GGA no logra superar son:
+    \begin{itemize}
+      \item Buenas tendencias para enlaces fuertes (covalente, iónico, metálico), pero no para pequeñas superposiciones.
+      \item Las autoitneracciones no son 100 \% canceladas. Cuanto más localización, la autointeracción se vuelve más relevante. También en sistemas sólidos que conservan mucho sus cualidades atómicas (orbitaes moleculares con apariencia de orbitales atómicos).
+      \item Como son tan locales, no logran ver cosas no localizadas como las vdW. Cuando se llega a un resutlado acorde suele ser más por errores numéricos.
+    \end{itemize}
+
+\subsection{Solución a la autointeracción}
+
+  Para resolver el problema de las autointeracciones se recurre a SIC (Self Interaction Correction), DFT+U o funcionales híbridos.
+
+  En principio, en DFT los electrones interactúan con un potencial efectivo generado por todos los electrones, incluido él mismo. Cuando la densidad es más dispersa, el error de autointeracción es pequeño. Sin embargo, cuanto más localizado se vuelve, mayor es error. El problema también se presenta cuando cambia la localidad del orbital, por ejemplo en una redox que transfieren un electron desde un estado deslocalizado a uno localizado. Esto es usual en óxidos de metales de transición, generando errores del orden de los eV.
+
+  El problema de la autointeracción viene de la mano del tratamiento que se le hace a la aproximación de XC en términos de electrostática: LDA es bueno describiendo el movimiento de un electrón en un potencial medio, resultando mejor cuanto más lejos estén los electrones entre sí.
+
+  El funcional SIC no es muy utilizado, pero su desarrollo fue conceptualmente importante. Es una solución ad hoc orbital-dependent, pero complicada.
+
+  Los funcionales híbridos combinan SIC con LDA/GGA. Es muy caro de aplicar con una base de ondas planas. DFT+U son funcionales útiles para describir materiales fuertemente correlacionados. Recientemente ha sido aplicado a materiales más generales con resultados prometedores.
+
+\subsection{Conexión adiabática}
+
+  Dijimos que HK considera un Hamiltoniano con todas las interacciones \emph{prendidas} mientras que KS describe un sistema no interactuante. Podemos pensar que ambos funcionales son dos casos extremos de una misma situación. La conexión la podemos hacer introduciendo un parámetro $\lambda \in[0,1]$ KS (0) hasta el sistema many-body de HK (1). El parámetro varía de forma continua y adiabática.
+
+  Utilizando el teorema de Hellmann-Feynman, se llega a que la suma entre la energía de Hartree y la XC es el promedio desde la no interacción hasta interaccion full sobre el valor de expectación de la matriz de interacción.
+
+  Becke asume que la variacion de la perturbación con $\lambda$ cambia suave y linealmente. Para $\lambda=0$ es el XC de Hartree computado con los orbitales KS, mientras que para $\lambda=1$ se requieren otras aproximaciones como LDA. Esto es lo que se conoce como el funcional half-half (HH). De acá se pueden ver B3LYP, PBEO y HSE.
+
+\subsection{Energía de Hartree-Fock}
+
+  El término HF es muy caro de calcular (10 a 100 veces más) con PW ya que va y vuelve entre espacios duales y en cada uno hace cálculos caros para cada orbital.
+
+  Cuando escribimos la integral HF en forma recíproca, tiene una divergencia en $q+G=0$. Este no es un problema porque es una singularidad evitable, pero de manera no trivial: remueven el término divergente y luego agregan un término que contiene esta divergencia atenuada con una exponencial.
+
+\subsection{DFT+U}
+
+  La idea de hacer DFT+U es tratar la fuerte interacción Coulómbica de los electrones localizados (la cual no está bien desripta con LDA ni GGA) agregando un término Hubbard. Esto es relevante principalmente en metales donde las interacciones Coulómbicas son particularmente fuertes en los orbitales d y f.
+   $$E_{DFT+U} = E_{DFT} + E_{U} \Rightarrow E_{U} = \frac{U}{2} \sum_a tr\left[ \rho_a (1 - \rho_a)  \right]$$
+
+  donde $\rho_a$ es la matriz de ocupación de OA. En otros términos estamos agregando una penalización a la energía DFT para forzar la matriz de ocupación a alcanzar la idempotencia (o completamente ocupada o compeltamente desocupada). Las ocupaciones fraccionarias no son compatibles con valores altos de U: a mayor U, mayor penalty.
+
+  \Obs{Para tener una idea gráfica, podemos mapear una parábola invertida donde $U$ es su máximo: pushea al sistema a caer en ocuáncias 0 ó 1 ya que las fracciones tienen un precio, siendo el $U$ el más caro cuando la ocupación es $\sfrac{1}{2}$. El término de Hubbard implica agregar un potencial de Hubbard a la ecuacion KS.}
+
+  Calcular $U$ en sólidos no es tan sencillo ya que uno no tiene tanto control sobre cuántos electrones se disponen en cada obrital: esto lo decide KS. Así que hay que sacarlo de la curvatura de $E_{DFT}$ con respecto al número de ocupación. En la práctica se introducen perturbaciones locales sobre grandes superceldas y luego se calculan las variaciones en la energía con respecto a los números de ocupación. Al invertir la función respuesta, sale $U$.
 
 
 
-  GGA:
+\subsection{Funcionales de vdW}
 
-  Se tiene información del gradiente (local) reducido además de la densidad local. El gradiente es finito donde la mayoría de los electrones viven. Pero divergente para r grande. Así los resultados cambian según estemos bien pegados al núcleo o más superficiales: podemos difernciar regiones que antes no! Ese es el chiste.
-
-  Ejemplos: PW91, PBE (uno de los más usados). PBE es un PW91 más masticado y simplificado, pero más potente.
-
-  PBE tiene la contribución LDA más una contribución de F_{XC} que no escuché qué lo ques. Gradient correction fraction? Los GGA se distinguen en esto porque el LDA es único papu.
-
-  Estos resuelven el overbinding del LDA. Aunque se acercan al valor real, siguen estando por encima en algunos casos.
-
-  GGA es importante para sistemas magnéticos. Particularmente el Fe: LDA dice que es no magnético, pero GGA logra describir que tiene propiedades magnéticas.
-
-  Sus efectos en los parámetros de red son más aleatorios. De todas formas logra describir mucho mejor las estructuras cristalinas de los elementos.
-
-
-  TABLA de problemas con LDA y GGA (ver)
-  - Buenas tendencias para enlaces fuertes (covalente, iónico, metálico), pero no para pequeñas superposiciones.
-  - La cancelación de las autoitneracciones es sólo aproximadamente verificada. Cuanto más localización, la autointeracción se vuelve más relevante. También en sistemas sólidos que conservan mucho sus cualidades atómicas (en el sentido de "individuales").
-  - Las interacciones de vdW no son consideradas: cuando se llega a un resutlado acorde suele ser más por errores numéricos. Como son tan locales, no logran ver cosas no localizadas como las vdW.
-
-  Lo que viene trata de resolver estos dos últimos puntos.
-
-  Self Interaction Correction (SIC):
-
-  En DFT estándar los electrones interactúan con unpotencial efectivo generado por todos los electrones, incluido él mismo. Cuando la densidad es mas dispersa, el error de autointeracción es pequeño. Si embargo, cuanto más localizado se vuelve, mayor el error  (figuras).
-
-  El problema también se presenta cuando cambia la localidad del orbital, por ejemplo en una redox que transfieren un electron desde un estado deslocalizado a uno localizado. (usual en óxidos de metales de transición). Errores del orden de los eV.
-
-  El problema de la autointeracción viene de la mano del tratamiento que se le hace a la aproximación de XC. La electrostática es el problema.
-
-  LDA es bueno describiendo el movimiento de un electrón en un potencial medio. Resulta mejor cuanto más lejos estén los electrones.
-
-  LDA muesta al FeO como un aislante.
-
-  hy una filmina con sic, +u e híbridos.
-
-  SIC (PZ):
-
-  Es una solución ad hoc orbital-dependent, pero complicada. No implementado en QE.
-
-  Conexión adiabática: HK es full interaction y KS es non interaction. Ambos funcionales son lo mismo, salvo que son extremos. Se introduce lambda que va desde KS (0) hasta HK (1). El parámetro varía de forma continua y adiabática. (ver)
-
-  Existen principios variacionales según Hellmann--Feynman. (Ver)
-
-  Termina llegando a la suma de Hartree con XC: promedio desde no interacción hasta interaccion sobre la media de la matriz de interacción.
-
-  Becke: asume que la variacion de Wlambda con lambda cambia suave y linealmente. Lambda nulo es el XC de Hartree computado con los orbitales KS. Para lambda 1 se requieren otras aproximaciones como LSDA. Esto es el funcional half-half.
-
-  B3LYP: tenemos una fracción de XC exacto, más una CL de LDA, GGA y demás. 20\% hartre-fock más GGA.
-
-  PBE0: Wlambda cambia con lambda de forma no lineal. Usan Hartree con PBE.
-
-  HSE: variante de PBE. Utilizan la función error.
-
-  En todos estos últimos (híbridos) tenemos que hacer el cálculo de Hartree Fock para conocer su contribución de intercambio.
-
-  ENERGÏA de HF (la de intercambio): hay una filmina
-
-  - HF con PW es muy caro: va y vuelve entre espacios duales y en cada uno hace cálculos caros para cada orbital y cada puntos l.
-  - Optimized effective potential (OEP) - exact exchange
-  - Funcionales híbridos: HH, B3LYP, otros (veR)
-
-  La integral de HF, escrita en forma recíproca, tiene una divergencia en q+G=0. No es un problema porque es una singularidad evitable, pero no de manera trivial: remueven el término divergente y luego agregan un término que contiene esta divergencia, pero que va exponencial en el numerador y se salva. La integral se vuelve una suma y todo es analíticamente resoluble.
-
-  W should be the electron-electron interaction term.
-
-  Scaling:
-
-  Hace cuentas de lo caro (ver).
-
-  Potenciales no locales? Agregar proyectores = más caro.
-
-  LDA+U:
-
-  Se agrega una corrección inspirada por la Hubber community (?). Se tiene un parámetro U que multiplica una traza. En la base diagonal la corrección LDA+U es más sencilla. Pone en peso a los orbitales localizados. Las ocupaciones fraccionarias no son compatibles con valores altos de U: mayor U, mayor penalty.
-
-  A mayor U cuesta más ocupar parcialmente el orbital: el sistema pushea a que esté fully ocupado o fully vacante. Este es el efecto práctico del LDA+U: empujar a los fully.
-
-  El parámetro U básicamete elimina las autointeracciones. (ver imagen)
-
-  Cuando se tiene fracciones, no se tiene una parábola, sino que una piece-wise lineal. Asociar al problema que presentaba para las energías de enlace. (hace toda una expliación en esta filmina).
-
-  Esta penalty ahora permite que el FeO un insulator. (antes era metal) Hay otros ejempos.
-
-  Cómo calculo el U? Para átomos es la mala curvatura del LDA/GGA de la energía total en función del número de ocupación. En sólidos no es tan sencillo ya que uno no tiene tanto control sobre cuántos electrones se disponen en cada obrital (esto lo decide KS). Hay que sacarlo de la curvatura de E^LDA con respecto al número de ocupación. También hay que hacerle una correción por estructura de bandas.
-
-  En la práctica: se introducen perturbaciones locales sobre grandes superceldas. Luego se calculan las variaciones en la energía con respecto a los números de ocupación. Al invertir la función respuesta, la Hubbard U es tanto.
-
-  Funcionales de vdW:
-
-  Se trata de un efecto de correlación no incluido en ningún ladito Bb (efectos de correlación no local).
-
-  LDA y GGA son locales: sólo consideran un punto. vdW necesita considerar al menos 2 puntos! (ver) los semilocales tampoco sirven
+  Se trata de un efecto de correlación no local incluido en XC, pero que no está considerado en ningún funcional: vdW necesita considerar al menos 2 puntos.
 
   Hay varias opciones:
-  - Despreciarlo.
-  - Agregar una correción de dispersión amortigüada empírica (Grimme varios)
-  - Desarrollar un funcional XC no local, partiendo desde la fórmula de Adiabatic Coupling Fluctaution Dissipation. (DF, VV).
-  - RPA y beyond RPA.
+    \begin{itemize}
+      \item Despreciarlo.
+      \item Agregar una correción de dispersión amortigüada empírica (Grimme).
+      \item Desarrollar un funcional XC no local.
+    \end{itemize}
 
-  La idea de Grimme. La función de damping tiende a cero cuando las distancias se hacen muy cortas. (Ver también está la de los otros que también está implementada).
+\subsection{Aspectos generales}
 
-  El truly: alto bardo por las consideraciones espaciales que tiene que tener. pero no sería empírico! :D
+  \begin{itemize}
+    \item \textbf{L(S)DA:} simples y bien definidos. Dan una buena geometría, pero overbinding.
+    \item \textbf{GGA:} gran variedad para elegir, con mejoras en los resultados de energía. Buena geometría.
+    \item \textbf{Meta-GGA:} muy complicados y no tan usados.
+    \item \textbf{SIC, DFT+U, Híbridos:} atacan el problema de la autointeracción.
+    \item \textbf{vdW:} falta mucho.
+  \end{itemize}
 
-  Hay que considerar la polarizabilidad que es básicamente lo que da lugar a vdW. Teniendo una polarizabilidad local, puedo extender después. Pero cada integral es 6D: mil caro.
+\section{Q\&A}
 
-  Hay cosas de integración eficiente: ya implementadas.
 
-  Al final hace un resumen que está bueno ver.
 
-----------------------------------------------------------------------------------------------------------------------------------------------------
+\section{Hands-on}
 
-Ver también preguntas de youtube.
+\definicion{Topic:} Functionals.
 
-Al comienzo del hands on tambien hay más cosas interesantes.
+\definicion{Speaker:} Iurii TIMROV (EPFL, Switzerland).
 
-phi localized function: son el estado que queremos corregir. Ver localized-states mainfold. Uno le indica mediante código duro qué es lo que quiere corregir. Aún no está disponible at input.
+\subsection{}
 
-----------------------------------------------------------------------------------------------------------------------------------------------------
-# Day-4 :
----------
+\subsubsection{Objetivo}
 
-## Topic of the day: Simulations with advanced functionals
+\subsubsection{Pasos}
 
-How to use advanced functionals (Hubbard U, hybrids, and Van der Waals)
-for materials modelling.
+\subsubsection{Resultados}
 
 
-### Description of examples:
 
-**Exercise 1:** Calculation of the projected density of states (PDOS)
-of FeO using DFT and DFT+U, and calculation of U
+--------------------------------------------------------------------------------
 
-    cd example1.DFT+U/
+EJEMPLO DEL HIERRO (1)
 
-**Exercise 2:** Calculation of the total energy of Si using DFT with
-PBE0 hybrid functional
+  Para determinar sobre qué orbitales debemos apicar la corrección, debemos recurrir a una parte de código duro de QE (aún no implementado vía input): $set\_hubbard\_n.f90$ y $set\_hubbard\_l.f90$ donde $n$ y $l$ refiere respectivamente a los números cuánticos principal y orbital.
 
-    cd example2.DFT+hybrids/
+  Queremos aplicar la $U$ sobre los electrones 3d ($n=3$ y $l=2$).
 
-**Exercise 3:** DFT study of graphite using Van der Waals functionals
+  Quiero hacer DFT+U: $lda\_plus\_u = .true.$.
 
-    cd example3.DFT+VdW/
+  Versiones de DFT+U: $lda\_plus\_u\_kind = 0,1,2$. Tenemos que $0$ es la versión más simple, $1$ es más completa y $2$ es DFT+U+V.
 
-----------------------------------------------------------------------------------------------------------------------------------------------------
+  $U\_projection\_type = 'atomic'$ Le dice qué tipo de funciones considerar para la matriz de ocupación. En este caso son funciones tipo atómicas. Podría ser $'orto'$ y serían atómicas, pero mútuamente ortogonales, incluyendo también los oxígenos. Esto arroja resultados más precisos.
 
-example1.DFT+U
+  $Hubbard\_U(i) = 1.d-8$ donde $i$ es el índice del átomo sobre el cual aplicar la corrección. Son casi cero para hacer un cálculo PBESol (PBE sobre sólidos), pero no cero para activar la maquinaria DFT+U. Esto generará información extra en el output que nos va a servir (LDA+U parameters al final: spin 1 = up y spin 2 = down). Igual no vamos a hacer ninguna correción U, sólo cheateamos al código (alto jáker). Como son hierros cistalográficamente equivalentes, deben tener el mismo valor.
 
-# PURPOSE OF THE EXERCISE:
-## Calculation of the projected density of states (PDOS) of FeO using DFT and DFT+U
-------------------------------------------------------------------------------------
+  https://www.materialscloud.org/work/tools/qeinputgenerator
 
-### Steps to perform:
+  La nscf es para tener la PDOS. Con $nbnd = 35$ agrega más antiestados para que la cosa salga linda.
 
-1. **Standard DFT case**
+  Primer átomo: spin 1 prácticamente leno, pero spin 2 ocupaciones parciales (0.2). En el segundo hierro tenemos las cosas invertidas. Ver cómo esto se refleja en la PDOS: la majority está toda por debajo de la Fermi y para la minority tenemos un poco abajo y otro poco arriba de la energía de Fermi. Tenemos que DFT dice que el sistema es metálico.
 
-   Perform a SCF calculation using pw.x :          `pw.x < pw.FeO.scf.in > pw.FeO.scf.out`
+  Cuando hacemos la corrección Hubbard ahora tenemos que el sistema es un aislante ya que se nos presenta el bandgap, lo cual es experimentalmente correcto.
 
-   Perform a NSCF calculation using pw.x :         `pw.x < pw.FeO.nscf.in > pw.FeO.nscf.out`
+  ¿Cómo elegir U?  Hay un ejecutable: hp.x (Hubbard Parameters). Tiene un input super cortito y al pie. No es conveniente para close-shell systems. De ahí saca el 4.6 eV.
 
-   Perform a calculation of PDOS using projwfc.x : `projwfc.x < projwfc.FeO.in > projwfc.FeO.out`
+  DFT-U-V: fomulación extendida que considera una interacción de Hubbard entre sitios interatómicos. La contribución U depende de un sitio, mientras que la contribución V depende de sitios. Ambos se pueden calcular con hp.x. Este funcional extendido tiene más flexibilidad: no sólo arregle el problema de localización, sino que también corrije la interacción con ligandos.
 
-   Plot PDOS using the script for gnuplot:         `gnuplot plot_pdos.gp`
+  \begin{figure}[H]
+      \centering
+      \includegraphics[scale = 0.6]{figs/D4/DFT+U+V.png}
+      \caption{DFT+U+V.}
+      \label{fig:DFT+U+V}
+  \end{figure}
 
-2. **DFT+U case**
+  \Obs{DFT+U suele ser peor que los funcionales híbridos.}
 
-   Modify input files pw.FeO.scf.in and pw.FeO.nscf.in by setting the
-   following:
+  --------------------------------------------------------------------------------
 
-   `Hubbard_U(1) = 4.6`
+  EJEMPLO DEL SILICIO (2)
 
-   `Hubbard_U(2) = 4.6`
+  Los funcionales híbridos son realmente caros. $input\_dft$ le decimos decimos qué funcional híbrido usar (pbe0, b3lyp, hse). Tomar un PP que sea lo más cercano a lo híbrido que queremos. Le damos la mesh de puntos. Si queremos que se encargue de la singularidad usamos $x\_gamma\_extrapolation = .true.$. Le pedimos que la integre analíticamente diciendo $exxdive\_treatment = 'gygi-baldereschi'$.
 
-   Here, Hubbard_U(1) and Hubbard_U(2) are the Hubbard parameters
-   for Fe1-3d and Fe2-3d states (in eV).
-   The value of U = 4.6 eV was chosen for demonstration purposes;
-   Hubbard U can be computed ab initio (see PRB 98, 085127 (2018); PRB 103, 045141 (2021)).
+  Usar extrapolación permite usar una $k$-mesh más chiquita.
 
-   Repeat all steps as in 1), and determine the PDOS in the DFT+U case.
+  --------------------------------------------------------------------------------
 
-   Note: change the value of the Fermi energy in "plot_pdos.gnu",
-   you can find the value of the Fermi energy at the end of the file pw.FeO.nscf.out.
-   Note that the Fermi energy must be converged with respect to the k points sampling:
-   therefore, here use the Fermi energy computed in the NSCF calculation which
-   is more accurate because the k-mesh is denser than in the SCF calculation.
+  EJEMPLO DEL Grafito (3)
 
-3. **Calculation of Hubbard U**
+  Interacción de vdW entre layers de grafeno. La distancia de equilibrio entre layers es muy pequeña con LDA y muy larga con GGA. Esto indica que debems considerar vdW.
 
-  Modify the input file pw.FeO.scf.in by setting back the following:
+  Tratar de hacer los 7 cálculos de las filminas (vc-relax). Algunos no locales, otros semiempírico. Finalmente usar LDA y GGA.
 
-  `Hubbard_U(1) = 1.d-8`
-
-  `Hubbard_U(1) = 1.d-8`
-
-  Clean the temporary directory:                      `rm -rf tmp/*`
-
-  Perform a SCF calculation using pw.x :              `pw.x < pw.FeO.scf.in > pw.FeO.scf.out`
-
-  Perform a linear-response calculation using hp.x :  `hp.x < hp.FeO.in > hp.FeO.out`
-
-  Respecto al input: amarillo (del comienzo) lo que ya debería saber, en azul lo nuevo: la magnetización (next week).
-
-  En sistemas magnéticos hay muchos mínimos locales. Deben barresse CI.
-
-  lda_plus_u = .true., quiero hacer DFT+U calculation
-   lda_plus_u_kind = 0, (0,1,2). 0 es la versión simplificada. 1 es más completa y 2 se va al carajo (DFT+U+V).
-  U_projection_type = 'atomic', Tenemos las funciones localizadas fai. En función de las que se tomen, el valor de U cambia. Este coso controla estas funciones fai. ATOMIC: funciones tipo atómicas (la data la saca del PP). ORTO: atómicas pero ortogonales entre ellas, incluyendo también los oxígenos. WENNIER tambien se puede. ORTO da resultados más precisos.
-
-  Hubbard_U(1) = 1.d-8
-  Hubbard_U(2) = 1.d-8
-
-  Son casi cero para hacer PBESol calculation, pero no cero para activar la DFT+U maquinaria. Esto genera info extra en el output que nos va a servir. Igual no vamos a hacer ninguna correción U, sólo cheateamos al código (alto jáker).
-
-  Los índices son para cada tipo de elemento. En este caso justo son hierros cistalográficamente equivalentes y por eso tienen el mismo valor.
-
-  Cómo encontrar esos valores? Es un problema, pero se puede calcular.
-
-  asdaasdadasdadasdad
-
-  QE input generator:
-  le cargas la estructura cristalina y te tira una guess inicial con parámetros sugeridos. También se le puede subir un cif.
-
-  La nscf es para tener la PDOS. con 35 agrega más antiestados para que la cosa salga linda.
-
-  Describe la PDOS.
-
-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-example2.DFT+hybrids
-
-
-# PURPOSE OF THE EXERCISE:
-## Calculation of the total energy of Si using DFT with PBE0 hybrid functional
-------------------------------------------------------------------------------------
-
-**Steps to perform:**
-
-1. Perform convergence tests of the total energy of Si using the
-   PBE0 functional and `x_gamma_extrapolation = .true.`
-   Use q-point meshes 1x1x1, 2x2x2, 4x4x4, and 8x8x8
-
-   `pw.x < pw.Si.scf.in > pw.Si.scf.out`
-
-2. Perform convergence tests of the total energy of Si using the
-   PBE0 functional and `x_gamma_extrapolation = .false.`
-   Use q-point meshes 1x1x1, 2x2x2, 4x4x4, and 8x8x8
-
-   `pw.x < pw.Si.scf.in > pw.Si.scf.out`
-
-   In which case the convergence is faster?
-
-
-
-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-example3.DFT+VdW
-
-
-# PURPOSE OF THE EXERCISE:
-## DFT study of graphite using Van der Waals functionals
-------------------------------------------------------------------------------------
-
-**Steps to perform:**
-
-   Perform a variable-cell optimization : `pw.x < pw.graphite.vc-relax.in > pw.graphite.vc-relax.out`
-
-   Study different cases:
-   1. `input_dft = 'vdw-DF'`    @PBE pseudo (non-local)
-   2. `input_dft = 'vdw-DF2'`   @PBE pseudo (non-local)
-   3. `input_dft = 'rVV10'`     @PBE pseudo (non-local)
-   4. `vdw_corr  = 'DFT-D'`     @PBE pseudo (semi-empirical)
-   5. `vdw_corr  = 'DFT-D3'`    @PBE pseudo (semi-empirical)
-   6.  Normal PBE calculation   @PBE pseudo
-   7.  Normal LDA calculation   @LDA pseudo
-
-   Compare the optimized inter-layer distances with the experimental value of 3.336 A.
+  $input\_dft$ cambia el funcional (cambia desde el comienzo la movida tropical).
+  $vdw\_corr$ correcciones que se hace al final del cálculo (tipo PP).
