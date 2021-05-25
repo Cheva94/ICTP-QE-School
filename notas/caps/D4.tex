@@ -104,11 +104,22 @@
 
   donde $\rho_a$ es la matriz de ocupación de OA. En otros términos estamos agregando una penalización a la energía DFT para forzar la matriz de ocupación a alcanzar la idempotencia (o completamente ocupada o compeltamente desocupada). Las ocupaciones fraccionarias no son compatibles con valores altos de U: a mayor U, mayor penalty.
 
-  \Obs{Para tener una idea gráfica, podemos mapear una parábola invertida donde $U$ es su máximo: pushea al sistema a caer en ocuáncias 0 ó 1 ya que las fracciones tienen un precio, siendo el $U$ el más caro cuando la ocupación es $\sfrac{1}{2}$. El término de Hubbard implica agregar un potencial de Hubbard a la ecuacion KS.}
+  \Obs{Para tener una idea gráfica, podemos mapear una parábola invertida donde $U$ es su máximo: pushea al sistema a caer en ocuáncias 0 ó 1 ya que las fracciones tienen un precio, siendo el $U$ el más caro cuando la ocupación es $\sfrac{1}{2}$. El término de Hubbard implica agregar un potencial de Hubbard a la ecuacion KS. La corrección introduce una discontinuidad en el término XC al ser un corrimiento rígido del potencial.}
 
-  Calcular $U$ en sólidos no es tan sencillo ya que uno no tiene tanto control sobre cuántos electrones se disponen en cada obrital: esto lo decide KS. Así que hay que sacarlo de la curvatura de $E_{DFT}$ con respecto al número de ocupación. En la práctica se introducen perturbaciones locales sobre grandes superceldas y luego se calculan las variaciones en la energía con respecto a los números de ocupación. Al invertir la función respuesta, sale $U$.
+  Calcular $U$ en sólidos no es tan sencillo ya que uno no tiene tanto control sobre cuántos electrones se disponen en cada obrital: esto lo decide KS. Así que hay que sacarlo de la curvatura de $E_{DFT}$ con respecto al número de ocupación. En la práctica se introducen perturbaciones locales sobre grandes superceldas y luego se calculan las variaciones en la energía con respecto a los números de ocupación. Al invertir la función respuesta, sale $U$. Para hacer este cálculo se tiene el ejecutable hp.x (Hubbard Parameters) en QE. No es conveniente para close-shell systems.
 
+  Dijimos que la corrección se aplica sobre orbitales altamente localizados, generalmente d y f. Para saber sobre qué orbitales aplicar la corrección, conviene graficar la PDOS para ver dónde andan los orbitales d y/o f y si están parcialmente ocupados o no. Generalmente se utiliza sobre metales de transición, lantánidos y actínidos.
 
+  \Obs{DFT+U suele ser peor que los funcionales híbridos.}
+
+  También tenemos DFT+U+V (FIg. \ref{fig:DFT+U+V}): una fomulación extendida que considera una interacción de Hubbard entre sitios interatómicos $V$ además de la contribución $U$ que depende de un único sitio. Este funcional extendido tiene más flexibilidad: no sólo arregla el problema de localización, sino que también corrige la interacción con ligandos. El valor de V también se puede conocer con hp.x.
+
+  \begin{figure}[H]
+      \centering
+      \includegraphics[scale = 0.6]{figs/D4/DFT+U+V.png}
+      \caption{DFT+U+V.}
+      \label{fig:DFT+U+V}
+  \end{figure}
 
 \subsection{Funcionales de vdW}
 
@@ -128,12 +139,43 @@
     \item \textbf{GGA:} gran variedad para elegir, con mejoras en los resultados de energía. Buena geometría.
     \item \textbf{Meta-GGA:} muy complicados y no tan usados.
     \item \textbf{SIC, DFT+U, Híbridos:} atacan el problema de la autointeracción.
-    \item \textbf{vdW:} falta mucho.
+    \item \textbf{vdW:} falta mucho. No corrigen las autointeracciones: en tal caso deben usarse conjuntamente vdW y DFT+U.
   \end{itemize}
 
 \section{Q\&A}
 
+  \definicion{In which cases do we need to use the pseudopotential with relativistic corrections?}
 
+  Tipically when your system contains heavy elements, tipically from the 4th period of the periodic table on.
+
+  For those elements the relativistic corrections can be important. Just for the sake of clarity: the scalar relativistic effects (mass and Darwin correction) are always present in the scalar relativistic pseudopotentials. The full relativistic correction (spin-orbit, basically) can be added with the lspinorb flag in the input file and with an appropriate fully relativistic pseudopotential. The spin-orbit correction starts to become somehow relevant from the 4th period of the periodic table on.
+
+  \definicion{What is the difference between k and q meshes?}
+
+  The k mesh is the mesh of k points for the electronic calculation. The q mesh, instead is a mesh of q points for the perturbation theory calculation. More details on q meshes will be given tomorrow, in the lecture and the hands-on session. Quick reply, q is the wave vector of the perturbation you apply to the system.
+
+  q-meshes have a different meaning in hybrids and in DFPT to compute U/phonons. In all cases one has to converge the result of interest with respect to the density of the q-mesh
+
+  \definicion{Is it advisable to adjust the exx\_fraction prameter for hybrid calculation depending on the system studied or the functional used? For example, the default value is 0.25 for input\_dft ='PBE0'. Can one change this parameter or set it by performing a convergence test w.r.t the experimental band gap of any system, e.g., a molecule?}
+
+  I would say NO... the functional parametrization (B3LYP, PBE0, etc...) is the result of extensive balancing and tuning procedures. if you change it to fit the band gap it is very likely that you are messing up with other properties. so I would say this option is for very advanced users and for cases where you exactly know what you are doing
+
+  \definicion{Is symmetry used for the q-mesh for hybrids, i.e., selecting a set of 'irreducible q-points'?}
+
+  actually no... in the sense that the k-mesh for the first BZ summation is reduced using symmetry, the q-mesh for the, possibly coarser grid, is complete...
+
+  Unfortunately you cannot use symmetry twice for the double sum over k and q!
+
+  \definicion{How could I change the hp.FeO.in if want to compute also V?}
+
+  For the moment we do not have a tutorial for DFT+U+V, In your case, you need to have this:
+      lda\_plus\_u = .true.,
+      lda\_plus\_u\_kind = 2,
+      U\_projection\_type = 'atomic',
+      Hubbard\_V(1,1,1) = 1.d-8
+      Hubbard\_V(2,2,1) = 1.d-8
+      Hubbard\_V(3,3,1) = 1.d-8
+  Then use the HP code to compute U and V - see example here: QE/HP/examples/example10
 
 \section{Hands-on}
 
@@ -148,8 +190,6 @@
 \subsubsection{Pasos}
 
 \subsubsection{Resultados}
-
-
 
 --------------------------------------------------------------------------------
 
@@ -167,6 +207,8 @@ EJEMPLO DEL HIERRO (1)
 
   $Hubbard\_U(i) = 1.d-8$ donde $i$ es el índice del átomo sobre el cual aplicar la corrección. Son casi cero para hacer un cálculo PBESol (PBE sobre sólidos), pero no cero para activar la maquinaria DFT+U. Esto generará información extra en el output que nos va a servir (LDA+U parameters al final: spin 1 = up y spin 2 = down). Igual no vamos a hacer ninguna correción U, sólo cheateamos al código (alto jáker). Como son hierros cistalográficamente equivalentes, deben tener el mismo valor.
 
+  Thank you! Yes, it was just to force the code to print the occupation matrix in the PBEsol case (note that the occupation matrix is not printed if you set lda\_plus\_u = .false.)
+
   https://www.materialscloud.org/work/tools/qeinputgenerator
 
   La nscf es para tener la PDOS. Con $nbnd = 35$ agrega más antiestados para que la cosa salga linda.
@@ -174,19 +216,6 @@ EJEMPLO DEL HIERRO (1)
   Primer átomo: spin 1 prácticamente leno, pero spin 2 ocupaciones parciales (0.2). En el segundo hierro tenemos las cosas invertidas. Ver cómo esto se refleja en la PDOS: la majority está toda por debajo de la Fermi y para la minority tenemos un poco abajo y otro poco arriba de la energía de Fermi. Tenemos que DFT dice que el sistema es metálico.
 
   Cuando hacemos la corrección Hubbard ahora tenemos que el sistema es un aislante ya que se nos presenta el bandgap, lo cual es experimentalmente correcto.
-
-  ¿Cómo elegir U?  Hay un ejecutable: hp.x (Hubbard Parameters). Tiene un input super cortito y al pie. No es conveniente para close-shell systems. De ahí saca el 4.6 eV.
-
-  DFT-U-V: fomulación extendida que considera una interacción de Hubbard entre sitios interatómicos. La contribución U depende de un sitio, mientras que la contribución V depende de sitios. Ambos se pueden calcular con hp.x. Este funcional extendido tiene más flexibilidad: no sólo arregle el problema de localización, sino que también corrije la interacción con ligandos.
-
-  \begin{figure}[H]
-      \centering
-      \includegraphics[scale = 0.6]{figs/D4/DFT+U+V.png}
-      \caption{DFT+U+V.}
-      \label{fig:DFT+U+V}
-  \end{figure}
-
-  \Obs{DFT+U suele ser peor que los funcionales híbridos.}
 
   --------------------------------------------------------------------------------
 

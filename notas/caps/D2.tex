@@ -223,7 +223,6 @@
 
   You need to do a test. The advantage of M-V with respect to M-P smearing is that the occupation numbers are guaranteed to be always non-negative with M-V. As a rule of thumb, M-V is always a good choice, except if your aim is to simulate real temperature effects on the electrons. In that case, you must use Fermi-Dirac smearing.
 
-
   \definicion{How do we choose the kpoints for the cutoff convergence tests?}
 
   a mesh dense enough for the calculation to  converge but the smaller as possible. As long as you use the same mesh the convergence test is valid, no  matter what mesh you use.
@@ -280,7 +279,6 @@
 
   Likely yes, but it is not a smart (that is: efficient) choice. The higher Ecut means the more cost of CPU.
 
-
   \definicion{Another question is, If I do not have metal, is better to use gauss smearing?}
 
   For insulators you usually don’t need smearing. In case if you use it for getting faster convergence use gaussian smearing with a very small degauss value.
@@ -300,6 +298,10 @@
   2.) the smearing is a bit more difficult, but you can use mv/mp for insulators as well, but the smearing there should be really small (no bigger than 0.01 Ry), basically you add it only to help in the convergence, once you choose it keep it the same for all calculations (supercells included), so in principle you can determine it for the bulk of the insulator, note that the 0.001 Ry/atom is the criterion for the cutoff not the smearing typically.
 
   in any case keep an eye on the smearing contribution written in the output and make sure its not significant and at least consistent between different calculations
+
+  \definicion{Why for the projwfc did the value dgauss decrease?}
+
+  This degaus is used for calculating DOS. With a denser k-point grid we can use smaller smearing: this way we will have better idea of the band-gap. Otherwise if the smearing is too high, this will "smear" the DOS and the band-gap will visually appear smaller.
 
 \section{Hands-on}
 

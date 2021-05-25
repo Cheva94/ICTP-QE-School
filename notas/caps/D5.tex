@@ -1,116 +1,180 @@
-\subsection{DFPT}
+\section{Teórico}
+
+  \definicion{Topic:} Density-functional perturbation theory (DFPT): phonons.
+
+  \definicion{Speaker:} Stefano BARONI (SISSA, Italy).
+
+\subsection{Funciones respuesta}
 
   Las funciones respuestas tienen la siguiente forma general
     $$propiedad = \frac{\partial variable}{\partial fuerza}$$
 
-  donde fuerza refiere a la fuerza de algún campo externo (eléctrico, magnético, de fuerzas/tensiones, etcétera).
+  donde \emph{fuerza} refiere a la fuerza de algún campo externo (eléctrico, magnético, de fuerzas/tensiones, etcétera).
 
-  Todas etas propiedades son macroscópicas. También se pueden pensar en funciones de respuesta microscópicas (o sea no sólo hay macro, hay de las dos) (ver filmina los ejemplos) En lo micro la perturbación externa tiene el tamaño adecuado para lo que se busca.
+  Permiten conocer tanto propiedades macroscópicas como microscópicas. En el caso miscroscópcio, la perturbación externa tiene el tamaño adecuado para lo que se pretende determinar.
 
-  Teorema de Hellmann-Feynman: es el ingrediente principal dentro de la teoría de funciones respuestas.
+\subsection{Teorema de Hellmann-Feynman}
+
+  El ingrediente principal dentro de la teoría de funciones respuestas es el teorema HF.
+
+  Pensémoslo primero en términos del Hamiltoniano y la energía. Supongamos que partimos de
     $$H_{\lambda} \Psi_{\lambda} = E_{\lambda} \Psi_{\lambda}$$
 
-  THF: supongamos qeu el H depende de un parámetro externo ${\lambda}$ (puedo ser algo individiual o colectivo). El parámetro NO es una variable dinámica. El teorema establece que
-    $$E_{\lambda}^{'} = \frac{\partial}{\partial \lambda} \expval{H_{\lambda}}{\Psi_{\lambda}}$$
+  donde el Hamiltoniano depende de un conjunto de parámetros externos ${\lambda}$ (aunque generalmente es una colección, puede ser un parámetro único), los cuales NO constituyen variables dinámicas. Luego, el teorema establece que
+    $$\frac{\partial}{\partial \lambda} E_{\lambda} = \frac{\partial}{\partial \lambda} \expval{H_{\lambda}}{\Psi_{\lambda}}$$
 
-    la comilla es derivada!
-  ya que el autovalore siempre puede pensarse como el val de exp del H sobre los autoestados. Aplicando la regla de la cadena (hay una dependencia triple en lambda: bra, op, ket).
-    $$\frac{\partial}{\partial \lambda} \expval{H_{\lambda}}{\Psi_{\lambda}} = $$
+  ya que el autovalor siempre puede pensarse como el valor de expectación del Hamiltoniano sobre los autoestados. Aplicando la regla de la cadena, se llega a
+    $$\frac{\partial}{\partial \lambda} \expval{H_{\lambda}}{\Psi_{\lambda}} =
+    \bra{\sfrac{\partial}{\partial \lambda} \Psi_{\lambda}} H_{\lambda} \ket{\Psi_{\lambda}} +
+    \bra{\Psi_{\lambda}} \sfrac{\partial}{\partial \lambda}  H_{\lambda} \ket{\Psi_{\lambda}} +
+    \bra{\Psi_{\lambda}} H_{\lambda} \ket{\sfrac{\partial}{\partial \lambda} \Psi_{\lambda}}$$
+    $$= \bra{\Psi_{\lambda}} \sfrac{\partial}{\partial \lambda}  H_{\lambda} \ket{\Psi_{\lambda}} +
+    E_{\lambda} \bra{\sfrac{\partial}{\partial \lambda} \Psi_{\lambda}} \ket{\Psi_{\lambda}} +
+    E_{\lambda} \bra{\Psi_{\lambda}} \ket{\sfrac{\partial}{\partial \lambda} \Psi_{\lambda}} =
+    \bra{\Psi_{\lambda}} \sfrac{\partial}{\partial \lambda}  H_{\lambda} \ket{\Psi_{\lambda}} +
+    E_{\lambda} \frac{\partial}{\partial \lambda} \braket{\Psi_{\lambda}}$$
 
-  Desarrolla y justifica. La norma del autovalor es uno (supuesto de la teoría). Y de ahí se llega a la cuestión que habíamos encontrado antes.
+  Como los autoestados se suponen normalizados, tenemos que $\braket{\Psi_{\lambda}} = 1$ y, por lo tanto, $\frac{\partial}{\partial \lambda} \braket{\Psi_{\lambda}} = 0$. Se concluye entonces que
+    $$\frac{\partial}{\partial \lambda} E_{\lambda} =
+    \bra{\Psi_{\lambda}} \sfrac{\partial}{\partial \lambda}  H_{\lambda} \ket{\Psi_{\lambda}}$$
 
-  Que la derivada del autovalor sea independiente de la derivada de los autovectores no es trivial: puedo avergiuar la derivada del autovalor con solo derivar el operador!
-    $$E__{\lambda} = \underbrace{min}_{\Psi : \bracket{\Psi}=1} \expval{H_{\lambda}}{\Psi}$$
+  Que la derivada del autovalor sea independiente de la derivada de los autovectores no es trivial: puedo avergiuar la derivada del autovalor con solo derivar el operador (y tomarle la media)!
 
-  El THF siempre es aplicable cuando el problema se puede escribir en términos de algún principio variacional. Hace una explicación copada ahí.
+  El teorema de HF se puede generalizar: es aplicable siempre que el problema se pueda escribir en términos de algún principio variacional. Supongamos que tenemos una función $g$ en función de un parámetro externo $\lambda$, la cual es el mínimo de un funcional $G$ que depende de una variable interna $x$ y el parámetro externo $\lambda$.
+    $$g(\lambda) = \min_{x} G[x, \lambda]$$
 
-  Por definición el mínimo se encuentre derivando a igualando a cero: como G depende de lambda, el mínimo también depende. $x \rightarrow x(\lambda)$.
-  [...]
-  $$g' (\lambda) = \frac{\partial G}{\partial \lambda}$$
+  \Obs{En el caso de la energía nos quedaría
+    $$E_{\lambda} = \min_{\Psi : \braket{\Psi}=1} \expval{H_{\lambda}}{\Psi}$$}
 
-  Llega a una generalización aplicable a cualquier principio variacional, extendiendo la aplicabilidad del THF.
+  El mínimos se encuentre derivando e igualando a cero: como $G$ depende de $\lambda$, el mínimo también depende de $\lambda$.
+    $$\frac{\partial}{\partial x} G \Big|_{x = x (\lambda)} = 0 \Rightarrow g(\lambda) = G[x (\lambda), \lambda]$$
 
-  Aplicación: susceptibilidades $\chi$ (derivada de un operador B -el anterior H- con respecto a un parámetro $\alpha$ - el previo lambda - la fuerza de la perturbación) como derivadas de la energía. Los sub BA: operador B perturbación A. A es una perturbación física y B un observable.
+  Luego
+    $$\frac{\partial}{\partial \lambda} g (\lambda) = \frac{\partial}{\partial x} G \Big|_{x = x (\lambda)} \frac{\partial}{\partial \lambda} x (\lambda) + \frac{\partial}{\partial \lambda} G \Big|_{x = x (\lambda)}$$
 
-  Ahora pienso en un H descripto por una perturbación donde la perturbación es la propia observación.
+  Como estamos en el mínimo, sabemos que $\sfrac{\partial}{\partial x} G \Big|_{x = x (\lambda)} = 0$, con lo cual
+    $$\frac{\partial}{\partial \lambda} g (\lambda) = \frac{\partial}{\partial \lambda} G [x, \lambda] \Big|_{x = x (\lambda)}$$
 
-  Si depende de ambos (la perturbación física y la perturbación ficticia) llego a una derivada segunda.
+\subsection{Susceptibilidades: derivadas de la energía}
 
-  [fui al baño - algo de Taylor]
+  La definición de susceptibilidad $\chi_{BA}$ es la derivada de un operador $B$ con respecto a un parámetro $\alpha$ que marca la fuerza de la perturbación. Se tiene que $A$ es una perturbación física mientras que $B$ es un observable.
+    $$\chi_{BA} = \frac{\partial}{\partial \alpha} \expval{B}$$
 
-  Usa la nomenclatura de la teoría perturbacional para determinar el primer y segundo orden del Taylor a partir de valores de expectación.
+  Supongamos que tenemos un Hamiltoniano que depende de una CL de perturbaciones $v_i$ con una contribución (fuerza) $\lambda_i$.
+    $$H = H_0 + \sum_i \lambda_i v_i$$
 
-  A la larga cambia la derivación por una integral: mucho más fácil de calcular!
+  Luego la energía del sistema será
+    $$E [\lambda] = E_0 - \sum_i f_i \lambda_i + \frac{1}{2} \sum_{ij} h_{ij} \lambda_i \lambda_j + ... $$
 
-  F_i y h_ij --> factores de respuestas (los que acompañan a los parámetros lambda)
+  donde la fuerza generalizada es $f_i = - \sfrac{\partial E}{\partial \lambda_i}$. Las derivadas primeras permiten determinar la optimización estructural y estudiar la dinámica molecular, mientras que las derivadas segundas $h_{ij}$ son funciones respuesta.
 
-  ---Pasamos esto a DFT---
+  Usando la nomenclatura de la teoría perturbacional, tenemos que
+    $$f_i = - \expval{v_i}{\Psi_0} = - \int v_i (\vec{r}) \rho_0 (\vec{r}) d \vec{r}$$
+    $$h_{ij} =  \int v_i (\vec{r}) \rho_j^{'} (\vec{r}) d \vec{r} = \int v_j (\vec{r}) \rho_i^{'} (\vec{r}) d \vec{r}$$
 
-  Expande el potencial. Define la energía: funcional universal que no depende de la perturbación y coupling w/ext potencial. Esto sería la base de DFT.
+\subsection{DFPT}
 
-  Aplica THF para derivar lo de recién. Elfuncional universal no depende de lambda.
+  El potencial externo $V_{\lambda}$ actuando sobre el sistema lo podemos expandir según
+    $$V_{\lambda} (\vec{r}) = V_0 (\vec{r}) + \sum_i \lambda_i v_i (\vec{r})$$
 
-  A partir de esto, derivo una segunda vez--> DFPT --> tengo la derivada del ground-state chdens. Integral de la i-esima perturbación con la density response to de j. (incluso al vesre por la simetría)
+  Considerando cómo DFT define la energía y usando el teorema de HF se llega a que
+    $$\frac{\partial^2}{\partial \lambda_i \partial \lambda_j} E (\lambda) = \int \frac{\partial}{\partial \lambda_j} n_{\lambda} (\vec{r}) v_i (\vec{r}) d \vec{r}$$
 
-  Entonces para calcular la segunda derivada, debemos calcular la respuesta de la densidad de carga. Como n(r) es la suma sobre las normas cuadráticas de los autoestados KS, la derivada es sencilla de expresar. Usualmente los autoestados son reales, así que se peude olvidar la conjugación. Sin embargo a veces son útiles los estados de Bloch y ahí sí juega lo complejo.
+  Esta derivada segunada es la base de DFPT. Entonces para calcular la segunda derivada, debemos calcular la respuesta de la densidad de carga. Como $n$ es la suma sobre las normas cuadráticas de los autoestados KS, la derivada es sencilla de expresar. Usualmente los autoestados son reales, así que se peude olvidar la conjugación. Sin embargo a veces son útiles los estados de Bloch y ahí sí juega lo complejo.
 
-  Hizo un par de explicaciones de bibliografía. Llega a una KS eqs en términos de proyectores.
+  En DFPT lo que se hace es plantear un ciclo SCF análogoal de DFT y linealizar los 3 pasos (Fig. \ref{fig:DFPT}). Luego, se resuelve este nuevo ciclo SCF.
 
-  varias cosas que me perdi acerca de la DFPT
+  \begin{figure}[H]
+      \centering
+      \includegraphics[scale = 0.6]{figs/D5/DFPT.png}
+      \caption{DFT vs DFPT}
+      \label{fig:DFPT}
+  \end{figure}
 
-  En DFPT se linealizan 3 eqs de la DFT (hay unos diagramas de flujo)
+\subsection{Simulación de vibraciones atómicas}
 
-  Una vez que linealizan, se resuelve SC un sistema de 3 ecuaciones lineales.
+  Un cristal perfecto lo podemos describir como un potencial externo periódico (Fig. \ref{fig:red}). Queremos saber cuál es la respuesta del sistema respecto al desplazamiento individual de los átomos. A primer orden el potencial perturbativao es lineal en la amplitud de la distorsión atómica. Luego, para saber cómo depende la energía con la amplitud de la distorción, expandimos en Taylor y vemos que podemos pensarla directamente como curvatura o como derivadas primera de la fuerza. Esto se conoce como constante de fuerzas interatómicas (IFC) en el cotexto de la dinámica de redes.
 
-\subsection{Simulando vibraciones atómicas}
+  \begin{figure}[H]
+      \centering
+      \includegraphics[scale = 0.6]{figs/D5/red.png}
+      \caption{Dinámica de redes.}
+      \label{fig:red}
+  \end{figure}
 
-  Un cristal perfecto lo podemos describir como un potencial externo vas una cosa periódica. Cual es la rta del sist respecto al desplazamiento individual? A primer orden el potencial perturbativao  es lineal en la amplitud de la distorsión atómica. Cómo depende la energía de la amplitud de la distorción? Taylor nos tira una derivada segunda (la de primer orden muere porque se supone que estamos en el mínimo vro - es la fuerza la primera - estamos en equilibrio). O sea definimos a la energía como: punto cero + fuerza + curvatura. Como la fuerza se anula y el punto cero es arbitario, podemos pensarla directamente como curvatura o como derivadas primera de la fuerza. Esto se conoce como fuerzas interatómicas en el cotexto de la dinámica de redes.
+  Ahora resolvemos la ecuación de autovalores para la matriz 3Nx3N de IFC (Fig. \ref{fig:vib}), la cual se conoce como matriz dinámica. Los autovalore son los cuadrados de las frecuencias vibracionales. Hay un factor $M$ que es la masa atómica, la cual puede incorporarse en el autovector.
 
-  Llega a un determinante de 3Nx3N. El autovalor es el cuadrado de la frecuencia vibracional. Hay una masa (M): si son iguales cero drama, si son distintas ojito. La masa sale por una cuestión de la teoria de pequeñas vibraciones. Cuestión: tiene que estaar, no te jode, no la jodas.
+    \begin{figure}[H]
+      \centering
+      \includegraphics[scale = 0.6]{figs/D5/vibraciones.png}
+      \caption{Problema de autovalores a resolver.}
+      \label{fig:vib}
+    \end{figure}
 
-  Tiene que ser positivo el determiannte que se resuelve (prueba de la derivada segunda). Si es negativo: saddle! Las freq cuadradas tienen que ser las positivas. Si son negativas: hay algo mal en el proceso o es una propiedad particular del sistema.
+  Por la prueba de la derivada segunda, sabemos que el determinante tiene que ser positivo para asegurarnos que tenemos el mínimo. Esto se expresa con que los cuadrados de las frecuencias cuadradas tienen que ser positivas.
 
 \subsection{Perturbaciones monocromáticas}
 
-  Si queremos acomodar fonones de long de onda arbitraria, debemos ahcer cálculos gigantes. Lo mejor es recurrir a la simetría: los fonones se clasifican en términos de sus wave numbers. Los fonones de diferente long de onda no interactúan entre sí. (pero dps dijo que si?)
+  Si queremos acomodar fonones de longitud de onda arbitraria, debemos hacer cálculos gigantes. Lo mejor es recurrir a la simetría: los fonones se clasifican en términos de sus números de onda. Los fonones de diferente longitud de onda no interactúan entre sí.
 
-  Esto se refleja en DFPT según: reescribir la long de onda en forma recíproca. Los orbitales no perturbados tiene vecotr de onda k definido (bloch). Pero el fonon tiene vecot rde onda q. Entonces resulta en k+q: número de onda general del resultado.
+  Esto se refleja en DFPT al reescribir la longitud de onda en forma recíproca. Los orbitales no perturbados tiene vector de onda k definido (teorema de Bloch). Pero el fonon tiene vector de onda q. Entonces resulta que el número de onda general del resultado es k+q.
 
-  Como el H es periódico, el KS orbital perturbado debe tener el mismo vector de onda (k+q). Es un estado de Bloch. La desidad respuesta tiene el mismo número de onda que la perturbación. Lo mismo pasa con el potecial.
+  Como el H es periódico, el KS orbital perturbado debe tener el mismo vector de onda (k+q): es un estado de Bloch. La densidad respuesta tiene el mismo número de onda que la perturbación. Lo mismo pasa con el potecial. Todo el cálculo puede mapearse entonces en calcular la parte periódica de la función de onda respuesta: la complejidad computacional del sistema yace en el número de electrones.
 
-  Todo el cálculo puede mapearse entonces en calcular la parte periódica de la función de onda reséusta. La complejidad computacional del sistema yace en un número de electrones, lo que hace que (comparo con la no perturbada).
+  \begin{figure}[H]
+    \centering
+    \includegraphics[scale = 0.6]{figs/D5/monocrom.png}
+  \end{figure}
 
 \subsection{Fonones en materiales polares}
 
-  Generan un campo eléctrico macroscópico estos materiales. Se complica la question Babe. La energía depende de la distorción de red u y del campo E. Cuadratico en cada uno más el acople entre ellos (potencial termodinámico que define el chiste)
+  Generan un campo eléctrico macroscópico estos materiales. La energía depende de la distorción de red y del campo eléctrico. La parturbación tiene número de onda definido. El campo E es irrotacional en el espacio recíproco. En ausencia de cargas y corrientes: cuando la polarización del fonon es ortogonal a q, entonces la ecuación de Mawell se satisfce sólo cuando el campo es idénticamente nulo.
 
-  La fuerza es la derivada de la energía respecto a la perturbación. El inducción electrica es la derivada de la energía respecto al campo E (interno).
+  Para los fonones transversales entonces la expresión es más sencilla. Ahora consideramos la otra ecuación de Mawell: se cumple sólo cuando D es nulo. Los fonones paralelos tienen otra expresión.
 
-  La parturbación tiene número de onda definido. El campo E es irrotacional en el espacio recíproco. En ausencia de cargas y corrientes: cuando la polarización del fonon es ortogonal a q, entonces la eq de Mawell se satisfce sólo cuando el campo es idénticamente nulo. Para los fonones transversales entonces la expresión es más sencilla :)
+  Debemos tener una estimada de la carga efectiva y la constante electrica para calcular los fonones longitudinales.
 
-  Ahora consideramos la otra de Mawell: se cumple sólo cuando D es nulo. Los fonones paralelos tienen otra expresión.
+  \begin{figure}[H]
+    \centering
+    \includegraphics[scale = 0.6]{figs/D5/fonones_polares.png}
+  \end{figure}
 
-  Etonces en materiales polares tenés dispersión fonónica donde la contribución longitudinal tiene mayor no sé qué que la transverasl (?)
+\subsection{Características principales DFPT}
 
-  Debemos tener una estimada de la carga efectiva y la constante electrica para calcular los fonones longitudinales. Debemos poder calcular eso: QE lo pede hacer! Las dificultades están que los campos eléctricos macroscópicos son descriptos por una dependencia creciente con algo ...
+  \begin{itemize}
+    \item Calculo de funicones respuesta en términos de orbitales respuesta.
+    \item Se resulven sistemas lineales sin calcular estados de conducción.
+    \item Sólo se debe calcular la respuesta a la perturbación dada.
+    \item También se pueden tratar perturbaciones no locales, no periódicas o campos eléctricos macroscópicos.
+  \end{itemize}
 
-  Tomar unos límites antes de calcular. El código lo hace.
 
-\subsection{Constantes de fuerza interatómica}
+\section{Q\&A}
 
-  A un dado número de onda, la DFPT nos da las frecuencia de esa longitud de onda (?). Métrica dinámica. Más suave? shoret dependence. dificultades? mateirales polares dadas las singularidades. Se resta el comportamiento no analítico en el límite de long de onda larga. Sacas la singularida. Interpolas con FT.
+  \definicion{Regarding acoustic phonons: how much is slightly different from zero? I mean when to consider it zero}
 
-\subsection{Características principales}
+  It depends on the system and technicalities (xc functional, etc.). See point 7.2 here: https://www.quantum-espresso.org/resources/faq/phonons
 
-  Calculo de funicones respuesta en términos de orbitales respuesta.
+  Let's say a few tens of $cm^{-1}$, more for lighter atoms (e.g. C), less for heavier atoms
 
-  Se resulven sistemas lineales (no se calculan estados de conducción)
+  \definicion{does the enforcement of the acoustic sum rule shift every frequency at every q-point by the amount required by the first 3 modes at gamma? i.e., does it shift the whole phonon dispersion? or just the first 3 modes at gamma?}
 
-  Sólo se debe calcular la respuesta a la perturbación dadas
+  In principle, it should shift only the first 3 modes at gamma by a significant amount, all other modes by negligible amounts. If all modes change significantly after ASR, there is something not right.
 
-  También se pueden tratar perturbaciones no locales, no periódicas o campos eléctricos macroscópicos.
+  \definicion{Question: Is there a rule of thumb to choose the convergence criteria (conv\_thr) in scf.in input and (tr2\_ph) in ph.in . Which psuedopotential (norm-conserving or ultrsoft)  do you recommend to avoid having imaginary frequency.}
+
+  For geometry optimizations I typically use conv\_thr = 1e-9 to 1e-10 (if the system converges that far), but instead of specifing conf\_thr=1e-9, I specify conf\_thr =1-e7 and upscale = 100.
+
+  Note that conv\_thr is extensive and depends on the number of atoms, e.g. for 10x more atoms, multiply conv\_thr by 10.
+  As for the tr\_ph: it is analogous to conv\_thr, but notice that it is a "square", hence conv\_thr =1e-8 would corresponds to tr2\_ph = 1e-16.
+
+  Type of  pseudopotential have nothing to do with imaginary frequencies.
 
 \section{Hands-on}
+
+  \definicion{Topic:} DFPT.
+
+  \definicion{Speaker:} Andrea URRU (ETH, Switzerland), Iurii TIMROV (EPFL, Switzerland).
 
 \subsection{Introducción}
 
@@ -130,6 +194,9 @@
 
 \subsection{Ex 1a}
 
+  ASR ver filminas! (13, 14, 15)
+
+
   Nonpolar material (silicon).
 
   Debemos resolver un sistema lineal que nos permite derivar primera de las funciones de onda. Pero a la derecha había otra cosa. Clave: los orbitales KS de ground state. Por eso es que necesitamos correr primero el pw.x.
@@ -138,7 +205,7 @@
 
   La matriz dinámica se guarda en fildyn, que es lo que después se va a usar.
 
-  ph.x output: como en la Si tenemos dos átomos en la elda unidad, tendremos 6 modos fonónicos. Se resuelven a tres por simetría. (de a 3 mods). Cuando ddv_scf^2 es menor que le umbral que dimos en el input, se considera alcanzada la convergencia. Luego de la convergencia se encuentran las frecuencias.
+  ph.x output: como en la Si tenemos dos átomos en la elda unidad, tendremos 6 modos fonónicos. Se resuelven a tres por simetría. (de a 3 mods). Cuando ddv\_scf\^2 es menor que le umbral que dimos en el input, se considera alcanzada la convergencia. Luego de la convergencia se encuentran las frecuencias.
 
   Vemos que hay 3 freq neg: indican que el cuadrado de la freq es negativa. Se tienen frecuencias imaginarias. Sería un signo de inestabilidad.
 
@@ -162,7 +229,7 @@
 
 \subsection{Ex 1b}
 
-  Interpolación de Fourier. Permite interpretar como la smooth fonoo dispersion es calculada en el QE.
+  Interpolación de Fourier (ver filminas 26). Permite interpretar como la smooth fonoo dispersion es calculada en el QE.
 
   En vez de calcular punto a punto (muy caro sobre todo si nos vamos fuera de gamma por la pérdida de simetrías). Lo que se hace es una técnica de interpolación. Se calcula en una coarse k-mesh.
 
@@ -232,8 +299,3 @@
 ----
 
 La carpeta que borre que "estaba vacía" en relidad tenía archivos ocultos!! son las configuraciones y gilada que robe de la VM.
-
-
-
-
-__________________________
