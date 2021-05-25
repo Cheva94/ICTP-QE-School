@@ -183,55 +183,106 @@
 
 \definicion{Speaker:} Iurii TIMROV (EPFL, Switzerland).
 
-\subsection{}
+\subsection{Objetivo}
 
-\subsubsection{Objetivo}
+  Utilizar funcionales avanzados (Hubbard U, hybrids, and Van der Waals) para modelado de materiales.
 
-\subsubsection{Pasos}
+\subsection{DFT+U}
 
-\subsubsection{Resultados}
+  Queremos calcular la PDOS de FeO usando DFT y DFT+U para comparar resultados.
 
---------------------------------------------------------------------------------
+  Para determinar sobre qué orbitales debemos apLicar la corrección, debemos recurrir a una parte de código duro de QE (aún no implementado vía input): $set\_hubbard\_n.f90$ y $set\_hubbard\_l.f90$ donde $n$ y $l$ refiere respectivamente a los números cuánticos principal y orbital. Queremos aplicar la $U$ sobre los electrones 3d ($n=3$ y $l=2$).
 
-EJEMPLO DEL HIERRO (1)
+  Para activar la maquinaria DFT+U hay que poner $lda\_plus\_u = .true.$. Las versiones de DFT+U son: $lda\_plus\_u\_kind = 0,1,2$, donde $0$ es la versión más simple, $1$ es más completa y $2$ es DFT+U+V. Luego, $U\_projection\_type = 'atomic'$ le dice qué tipo de funciones considerar para la matriz de ocupación. En este caso son funciones tipo atómicas. Podría ser $'orto'$ y serían atómicas, pero mútuamente ortogonales, incluyendo también los oxígenos. Esto arroja resultados más precisos. Finalmente, tenemos $Hubbard\_U(i) = 1.d-8$ donde $i$ es el índice del átomo sobre el cual aplicar la corrección. Son casi cero para hacer un cálculo PBESol (PBE sobre sólidos), pero no cero para activar la maquinaria DFT+U. Esto generará información extra en el output que nos va a servir (LDA+U parameters al final: spin 1 = up y spin 2 = down). Con esto tan bajito no vamos a hacer ninguna correción U, sólo es para pedirle que imprima la matriz de ocupación. Como son hierros cistalográficamente equivalentes, deben tener el mismo valor en $Hubbard\_U(i)$.
 
-  Para determinar sobre qué orbitales debemos apicar la corrección, debemos recurrir a una parte de código duro de QE (aún no implementado vía input): $set\_hubbard\_n.f90$ y $set\_hubbard\_l.f90$ donde $n$ y $l$ refiere respectivamente a los números cuánticos principal y orbital.
+  Primero hacemos la DFT estándar:
+    \begin{verbatim}
+      pw.x < pw.FeO.scf.in > pw.FeO.scf.out
+      pw.x < pw.FeO.nscf.in > pw.FeO.nscf.out
+      projwfc.x < projwfc.FeO.in > projwfc.FeO.out
+      gnuplot plot\_pdos.gp
+    \end{verbatim}
 
-  Queremos aplicar la $U$ sobre los electrones 3d ($n=3$ y $l=2$).
+  La nscf es para tener la PDOS. Con $nbnd = 35$ agrega más antiestados para que la cosa salga linda. Vemos que para el átomo 1 el spin up (spin 1) está prácticamente lleno, pero spin down (spin 2) tiene ocupaciones parciales (0.2). En el segundo hierro tenemos las cosas invertidas.
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale = 0.5]{figs/D4/LAD+U.png}
+    \end{figure}
 
-  Quiero hacer DFT+U: $lda\_plus\_u = .true.$.
+  Esto se refleja en la PDOS: la majority está toda por debajo de la Fermi y para la minority tenemos un poco abajo y otro poco arriba de la energía de Fermi. Vemos entonces que al hacer DFT estándar el sistema es metálico.
 
-  Versiones de DFT+U: $lda\_plus\_u\_kind = 0,1,2$. Tenemos que $0$ es la versión más simple, $1$ es más completa y $2$ es DFT+U+V.
+  \begin{figure}[H]
+      \centering
+      \includegraphics[scale = 0.5]{figs/D4/FeO_pre.png}
+  \end{figure}
 
-  $U\_projection\_type = 'atomic'$ Le dice qué tipo de funciones considerar para la matriz de ocupación. En este caso son funciones tipo atómicas. Podría ser $'orto'$ y serían atómicas, pero mútuamente ortogonales, incluyendo también los oxígenos. Esto arroja resultados más precisos.
+  Ahora vamos a calcular el valor de la U de Hubbard, partiendo desde el valor casi nulo que le hemos asignado. Luego
+    \begin{verbatim}
+      pw.x < pw.FeO.scf.in > pw.FeO.scf.out
+      hp.x < hp.FeO.in > hp.FeO.out
+    \end{verbatim}
 
-  $Hubbard\_U(i) = 1.d-8$ donde $i$ es el índice del átomo sobre el cual aplicar la corrección. Son casi cero para hacer un cálculo PBESol (PBE sobre sólidos), pero no cero para activar la maquinaria DFT+U. Esto generará información extra en el output que nos va a servir (LDA+U parameters al final: spin 1 = up y spin 2 = down). Igual no vamos a hacer ninguna correción U, sólo cheateamos al código (alto jáker). Como son hierros cistalográficamente equivalentes, deben tener el mismo valor.
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale = 0.5]{figs/D4/U.png}
+    \end{figure}
 
-  Thank you! Yes, it was just to force the code to print the occupation matrix in the PBEsol case (note that the occupation matrix is not printed if you set lda\_plus\_u = .false.)
+  Ahora usamos el valor obtenido para hacer una corrida DFT+U: modificamos los inputs $pw.FeO.scf.in$ y $pw.FeO.nscf.in$ cambiando los valores de la U de Hubbard a 4.6 (eV). En este caso estos valores hacen referencia a los estados 3d de ambos hierros. Luego hacer los mismos pasos que antes.
 
-  https://www.materialscloud.org/work/tools/qeinputgenerator
+  Vemos que cuando hacemos la corrección Hubbard ahora tenemos que el sistema es un aislante ya que se nos presenta el bandgap, lo cual es experimentalmente correcto.
 
-  La nscf es para tener la PDOS. Con $nbnd = 35$ agrega más antiestados para que la cosa salga linda.
+\subsection{DFT+hybrids}
 
-  Primer átomo: spin 1 prácticamente leno, pero spin 2 ocupaciones parciales (0.2). En el segundo hierro tenemos las cosas invertidas. Ver cómo esto se refleja en la PDOS: la majority está toda por debajo de la Fermi y para la minority tenemos un poco abajo y otro poco arriba de la energía de Fermi. Tenemos que DFT dice que el sistema es metálico.
+  Vamos a calcular la energía total del Si usando DFT con el funcional híbrido PBE0.
 
-  Cuando hacemos la corrección Hubbard ahora tenemos que el sistema es un aislante ya que se nos presenta el bandgap, lo cual es experimentalmente correcto.
+  Los funcionales híbridos son realmente caros. Con $input\_dft$ le decimos qué funcional híbrido usar (pbe0, b3lyp, hse). Para esto, debemos usar un PP que sea lo más cercano al híbrido que queremos. Si queremos que se encargue de la singularidad, usamos $x\_gamma\_extrapolation = .true.$. Le pedimos que la integre analíticamente diciendo $exxdive\_treatment = 'gygi-baldereschi'$.
 
-  --------------------------------------------------------------------------------
+  \Obs{nqx1 = 1, nqx2 = 1, nqx3 = 1 es la q-mesh, que en este caso sería $\Gamma$.}
 
-  EJEMPLO DEL SILICIO (2)
+  Primero vamos a hacer el test de convergencia usando $x\_gamma\_extrapolation = .true.$ con q-mesh 1x1x1, 2x2x2, 4x4x4, and 8x8x8. Luego hacemos el test de convergencia de la energía total usando $x\_gamma\_extrapolation = .false.$ y los mismos q-mesh.
+  \begin{verbatim}
+    pw.x < pw.Si.scf.in > pw.Si.scf.out
+  \end{verbatim}
 
-  Los funcionales híbridos son realmente caros. $input\_dft$ le decimos decimos qué funcional híbrido usar (pbe0, b3lyp, hse). Tomar un PP que sea lo más cercano a lo híbrido que queremos. Le damos la mesh de puntos. Si queremos que se encargue de la singularidad usamos $x\_gamma\_extrapolation = .true.$. Le pedimos que la integre analíticamente diciendo $exxdive\_treatment = 'gygi-baldereschi'$.
+  No hice todo porque es muy lento, pero el resultado sería como la figura a continuación. El cálculo con $x\_gamma\_extrapolation = .true.$ es muchísimomás rápido. Además, usar extrapolación permite usar una $q$-mesh más chiquita.
 
-  Usar extrapolación permite usar una $k$-mesh más chiquita.
+  \begin{figure}[H]
+      \centering
+      \includegraphics[scale = 0.5]{figs/D4/hibridos.png}
+  \end{figure}
 
-  --------------------------------------------------------------------------------
+\subsection{DFT+vdW}
 
-  EJEMPLO DEL Grafito (3)
+  Vamos a estudiar grafito con DFT usando funcionales de vdW. La idea es ver la interacción de vdW entre layers de grafeno. Primero debemos hacer una vc-relax.
+  \begin{verbatim}
+    pw.x < pw.graphite.vc-relax.in > pw.graphite.vc-relax.out
+  \end{verbatim}
 
-  Interacción de vdW entre layers de grafeno. La distancia de equilibrio entre layers es muy pequeña con LDA y muy larga con GGA. Esto indica que debems considerar vdW.
+  Luego estudiar los siguientes casos para comparar la distancia entre capas (valor experimental: 3.336 A):
+  \begin{itemize}
+    \item Sin considerar vdW:
+      \begin{itemize}
+        \item Normal LDA calculation   @LDA pseudo
+        \item Normal PBE calculation   @PBE pseudo
+      \end{itemize}
+    \item Considerando vdW de manera no local:
+      \begin{itemize}
+        \item `input_dft = 'vdw-DF'`    @PBE pseudo (non-local)
+        \item `input_dft = 'vdw-DF2'`   @PBE pseudo (non-local)
+        \item `input_dft = 'rVV10'`     @PBE pseudo (non-local)
+      \end{itemize}
+    \item Considerando vdW de manera semiempírico:
+      \begin{itemize}
+        \item `vdw_corr  = 'DFT-D'`     @PBE pseudo (semi-empirical)
+        \item `vdw_corr  = 'DFT-D3'`    @PBE pseudo (semi-empirical)
+      \end{itemize}
+  \end{itemize}
 
-  Tratar de hacer los 7 cálculos de las filminas (vc-relax). Algunos no locales, otros semiempírico. Finalmente usar LDA y GGA.
+  \Obs{Mientras que $input\_dft$ cambia el funcional (cambia desde el comienzo la movida tropical), $vdw\_corr$ hace correcciones al final del cálculo (tipo PP).}
 
-  $input\_dft$ cambia el funcional (cambia desde el comienzo la movida tropical).
-  $vdw\_corr$ correcciones que se hace al final del cálculo (tipo PP).
+  \begin{figure}[H]
+      \centering
+      \includegraphics[scale = 0.5]{figs/D4/vdW.png}
+  \end{figure}
+
+  La distancia de equilibrio entre layers es muy pequeña con LDA y muy larga con GGA. Esto indica que debemos considerar vdW. ¿Cuál es la mejor? Habría que hacer test de convergencia primero. 
