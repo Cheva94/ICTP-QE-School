@@ -123,7 +123,7 @@
 
   \begin{figure}[H]
     \centering
-    \includegraphics[scale = 0.6]{figs/D5/monocrom.png}
+    \includegraphics[scale = 0.5]{figs/D5/monocrom.png}
   \end{figure}
 
 \subsection{Fonones en materiales polares}
@@ -136,7 +136,7 @@
 
   \begin{figure}[H]
     \centering
-    \includegraphics[scale = 0.6]{figs/D5/fonones_polares.png}
+    \includegraphics[scale = 0.5]{figs/D5/fonones_polares.png}
   \end{figure}
 
 \subsection{Características principales DFPT}
@@ -176,116 +176,133 @@
 
   \definicion{Speaker:} Andrea URRU (ETH, Switzerland), Iurii TIMROV (EPFL, Switzerland).
 
-\subsection{Introducción}
+\subsection{Materiales no polares: Si}
 
-    Vamos a calcular la fono freq y fonon disp.
+  Vamos a calcular para Si las frecuencias fonónicas en el punto $\Gamma$ (example1a) y la dispersión fonónica (example1b).
 
-    Ver conceptos básicos.
+\subsubsection{Punto $\Gamma$}
 
-    usa: alfa comp desplazamiento del átomo s (son 3xN) autovec
+  Primero vamos a calcular los fonones en $\Gamma$. Dentro de la carpeta tenemos:
+    \begin{itemize}
+      \item $pw.Si.in \Rightarrow$ SCF del estado fundamental.
+        \begin{verbatim}
+          mpirun -np 2 pw.x < pw.Si.in > pw.Si.out
+        \end{verbatim}
+      \item $ph.Si.in \Rightarrow$ cálculo de fonones en $\Gamma$.
+      \begin{verbatim}
+        mpirun -np 2 ph.x < ph.Si.in > ph.Si.out
+      \end{verbatim}
+      \item $dynmat.Si.in \Rightarrow$ imposición de la ASR.
+      \begin{verbatim}
+          mpirun -np 2 dynmat.x < dynmat.Si.in > dynmat.Si.out
+      \end{verbatim}
+    \end{itemize}
 
-    La cantidad de fonon's freq que obtenemos es 3N.
+  En el input de ph.x vemos que:
+    \begin{itemize}
+      \item Luego de la namelist \&inputph ponemos las coordenadas del vector de onda ($q=\sfrac{2\pi}{a}$) donde queremos calcular los fonones.
+      \item El ubral para la SCF es varios órdenes menor: como necesitamos derivadas segundas, tenemos que ir más abajo.
+      \item Le indicamos dónde queremos que ponga la matriz dinámica.
+    \end{itemize}
 
-    El concepto central: interactomic force Constantes
+  Como en la Si tenemos dos átomos en la celda unidad, tendremos 6 modos fonónicos. Se resuelven de a tres por simetría. Cuando ddv\_scf\^2 es menor que el umbral que le dimos en el input, se considera alcanzada la convergencia. Luego de la convergencia se encuentran las frecuencias.
 
-    Habla cómo llega al problema de autovaores. Lo que queremos diagonalizar es la matriz dinámica. Los autovalores son las freq fonónicas. Los autovectores están asociados (no son) los atomc displac (están divididos por la raiz de la masa atómica). De ahí se saco la masa que había en el teórico!
+  En el ph.Si.out encontramos lo siguiente:
+  \begin{figure}[H]
+    \centering
+    \includegraphics[scale = 0.6]{figs/D5/Si_ph.png}
+  \end{figure}
 
-    El código de fonones cover gran variedad de sistemas y métodos: ver listado.
+  De los 6 modos que tenemos, 3 son acústicos y 3 son ópticos. Siempre se espera que haya 3 modos acústicos y el resto son modos ópticos.
 
-\subsection{Ex 1a}
+  Vemos que los 3 modos acústicos son negativos, lo cual indica que el cuadrado de la freq es negativa: se tienen frecuencias imaginarias. Esto sería un signo de inestabilidad. Sin embargo, se pede ver que en este caso justo corresponde a ruido numérico, porque son negativas, pero muy cercanas a cero. Más allá de eso, estamos calculando en $\Gamma$ y ahí los modos acústicos deberían ser exactamente nulos debido a que son traslaciones rígidas del cristal. Por la invariancia traslacional, la energía del sistema es invariante y de allí que la frecuencia debe ser nula.
 
-  ASR ver filminas! (13, 14, 15)
+  Los errores numéricos provocan que las IFC no satisfagan de manera estricta la ASR (Acoustic Sum Rule).
 
+  Todo este problema se soluciona con dynmat.x: esto impone la ASR. Luego, en el dynmat.out vemos las frecuencias de la matriz dinámica corregidas: ahora los modos acústicos sí son cero.
 
-  Nonpolar material (silicon).
+  \begin{figure}[H]
+    \centering
+    \includegraphics[scale = 0.6]{figs/D5/ASR.png}
+  \end{figure}
 
-  Debemos resolver un sistema lineal que nos permite derivar primera de las funciones de onda. Pero a la derecha había otra cosa. Clave: los orbitales KS de ground state. Por eso es que necesitamos correr primero el pw.x.
+\subsubsection{Dispersión fonónica}
 
-  Input de ph.x: al final se pone el vector de onda particular que se quiera calcular. Vemos que el umbral es bajísimo: es una derivada segunda! (a la -14).
+  Ahora vamos a calcular la dispersión fonónica de Si. Para esto podríamos obtener las curvas corriendo punto a punto. Esto sería infinitamente largo. La alternativa razonable es hacer una interpolación de Fourier:
+    \begin{enumerate}
+      \item Calcular las matrices dinámicas sobre el espacio recíproca para una cantidad pequeña de puntos q.
+      \item Hacemos la antitransformada de Fourier a partir de la información que tenemos con esta mesh poco densa. Esto nos permite conocer la IFC sobre todo el espacio real (claro que a mayor densidad de la mesh, mejor es este conocimiento, pero no importa: sabemos mucho igual).
+      \item Luego hacemos la transformada de Fourier para volver al espacio recíproco, pero ahora podemos elegir cualquier vector q, sin relación alguna con los del comienzo. Los que vamos a usar son aquellos que se ubican  sobre los caminos de alta simetría.
+    \end{enumerate}
 
-  La matriz dinámica se guarda en fildyn, que es lo que después se va a usar.
+    \begin{figure}[H]
+      \centering
+      \includegraphics[scale = 0.6]{figs/D5/Fourier.png}
+    \end{figure}
 
-  ph.x output: como en la Si tenemos dos átomos en la elda unidad, tendremos 6 modos fonónicos. Se resuelven a tres por simetría. (de a 3 mods). Cuando ddv\_scf\^2 es menor que le umbral que dimos en el input, se considera alcanzada la convergencia. Luego de la convergencia se encuentran las frecuencias.
+  \Obs{Se llama de Fourier porque la interpolación necesita ir y volver entre espacios duales. Tranquilamente podemos tener 10 puntos de inicio y después pedirle 400.}
 
-  Vemos que hay 3 freq neg: indican que el cuadrado de la freq es negativa. Se tienen frecuencias imaginarias. Sería un signo de inestabilidad.
+  Los pasos a seguir son:
+    \begin{enumerate}
+      \item Concoer el estado fundamental.
+        \begin{verbatim}
+          mpirun -np 2 pw.x < pw.Si.in > pw.Si.out
+        \end{verbatim}
+      \item Hacer el cálculo de fonones sobre una mesh uniforme de puntos q (4x4x4 da 8 puntos no equivalentes). (OJO: cambia la forma en la que se pide mesh uniforme en el input respectoa pedirle q puntuales)
+      \begin{verbatim}
+        mpirun -np 2 ph.x < ph.Si.in > ph.Si.out
+      \end{verbatim}
+      \item Hacer la antitransformada de las IFC.
+      \begin{verbatim}
+        mpirun -np 2 q2r.x < q2r.Si.in > q2r.Si.out
+      \end{verbatim}
+      \item Hacer la transformada para calcular las frecuencias genéricas a partir de las IFC (la vuelta la hacemos con 396 puntos).
+      \begin{verbatim}
+        mpirun -np 2 matdyn.x < matdyn.Si.in > matdyn.Si.out
+      \end{verbatim}
+      \item Plotear. El plotband.x es puramente secuencial.
+      \begin{verbatim}
+        plotband.x < plotband.Si.in > plotband.Si.out
+        gnuplot plot_dispersion.gp
+        atril phonon_dispersion.eps
+      \end{verbatim}
+    \end{enumerate}
 
-  Se pede ver que en este caso justo corresponde a ruido numérico, porque son negativas, pero muy cercanas a cero. (ver la presentación).
-
-  Los modos acusticos en gamma deberían ser necesariamente nulos. Debido a que la freq fononica está dada por diferenias en energía originadas por la distorsion fononica. (algo mas). Como los modos acusticos en gamma son traslaciones rígidas. Por la invariancia traslacional, la energía del sistema es invariante y por eso la freq es nula.
-
-  Habla de la regla de la suma acustica. Hay una condicion de la invarianza traslacional. Esta condicion no es impuesta por deefault. Este cero  pero no ser un cero en términos numéricos.
-
-  El dynmat.x viene a corregir esto me parece que entendi. revisar. Esto impone la suma del gammma de no se quien.
-
-  El dynmat.out contiene las freq de la matriz dinámica corregida. Ahora lo que es cero, realmente es cero.
-
-  Los otros 3 modos son los modos ópticos.
-
-  Por qué no se hace automáticamente? no hay por qué. En realidad es una cuestión de cálculo del R-espacio.
-
-
-  You inspect the phonon dispersion and check if you have negative frequencies. There can be two reasons: 1) physical - the system is dynamically unstable, 2) numerical - your results are not converged
-
-
-\subsection{Ex 1b}
-
-  Interpolación de Fourier (ver filminas 26). Permite interpretar como la smooth fonoo dispersion es calculada en el QE.
-
-  En vez de calcular punto a punto (muy caro sobre todo si nos vamos fuera de gamma por la pérdida de simetrías). Lo que se hace es una técnica de interpolación. Se calcula en una coarse k-mesh.
-
-  Se llama de Fourier porque la interpolación necesita ir y volver entre espacios duales. Hacemos la FT de la matriz dinámica con una k-mesh gruesa. Esto nos da una idea de la interatomic force constanst sobre todo el espacio real. Luego hacemos una FT de regreso, pero podemos pedir el punto que se nos cante: tener 10 puntos de inicio y después pedirle 100. No importa la simetría.
-
-  Los nuevos puntos estána a lo largo de las líneas de alta simetría.
-
-  q2r.x hace la transformacion de ida hacia el real y matdyn.x nos trae de vuelta al recíproco. En este aso la ida era sobre 8 puntos, pero la vuelta es de 396.
-
-  ldisp = .true.,
-  7   nq1 = 4,
-  8   nq2 = 4,
-  9   nq3 = 4,
-
-  le dice que queremos una dispersion fononica con una mesh 4x4x4.
-
-    ph.si.out vemos que hace todo el cálculo de antes pero para cada uno de los 8 puntos de la mesh (cuales 8?)
-
-  En los Si.dyn se tiene la matriz dinamica para cada uno de los puntos.
-
-  Cómo saber que estamos usando una grilla gruesa lo suficientemente fina? Hacer pruebas. Corroborar visualmente si hay cambios muy graves. Comparar 2x2x2 4x4x4 6x6x6 8x8x8. Hacer plotban para cada grilla. Incluir lo que falta.
+  ¿Cómo saber que estamos usando una grilla \emph{gruesa} lo \emph{suficientemente fina}? Hacer pruebas. Corroborar visualmente si hay cambios muy graves. Comparar 2x2x2 4x4x4 6x6x6 8x8x8. Hacer plotban para cada grilla.
 
   Otra manera es hacer un cálculo directo. Como es una interpolación, se puede hacer una single q vector calculation. Calcular algunitos y ver que caigan sobre la curva generada con la mesh dada.
 
-  Cualquiera de las dos va a andas bien.
+  Cualquiera de los dos caminos va a andar bien.
+  \begin{figure}[H]
+    \centering
+    \includegraphics[scale = 0.35]{figs/D5/Si_disp.png}
+  \end{figure}
 
-  Hw2: ver filmina.
+\subsection{Materiales polares: AlAs}
 
-  Phonon mode visualizer: ver filmina. Lee directamente el input del pw y el ouput "matdyn.modes". Tocas interactivamente los modos fonónicos y te muestra cómo se van moviendo. También podes ver la celdad unidad para entedner cómo el desplazamiento fonónico son modulados por el q vector.
+  Ahora tenemos un aislante polar por lo que aparece una contribución no analítica. En el input del ph.x tengo que poner $epsil = .true.$ para que haga el cálculo con el campo elécctrico que hace falta.
 
-  Ver cuando la interpolación ya no funciona tan bien (filmina).
+\subsubsection{Punto $\Gamma$}
 
-  IFC Interatomic Force Constants.
+  ----------
 
-\subsection{Ex 2a}
+todavía no le pusimos la parte del polar insulatro. Sólo esamos calculando un aparte (Ver cual era). No aparecen las separaciones LO-TO: las 3 freq opticas están degeneradas dada la simetría del sistema. Cuadno se incluye le termino no analitico, aparece spliting. (efecto stark?)
 
-  Aislantes polares: aparece una contribución no analítica. Hay dos valores que neceisto Z epsilon. debo caluclar con campo elecrico.
+dynmat ahora le especificamos los vecotres que sacamos (las que no están en la parte analitica). Al no ser analitica debemos decirle a direccion d aproximacion.
+q(1) = 1.0,
+7     q(2) = 0.0,
+8     q(3) = 0.0
 
-  input del ph.x
-  epsil = .true.
- hace el calculo con el campo eéctirco eso que hace falta
+Vemos que despues de esto se levanta la degeneración: LO-TO splitting se llama esto.
 
-  todavía no le pusimos la parte del polar insulatro. Sólo esamos calculando un aparte (Ver cual era). No aparecen las separaciones LO-TO: las 3 freq opticas están degeneradas dada la simetría del sistema. Cuadno se incluye le termino no analitico, aparece spliting. (efecto stark?)
+\subsubsection{Dispersión fonónica}
 
-  dynmat ahora le especificamos los vecotres que sacamos (las que no están en la parte analitica). Al no ser analitica debemos decirle a direccion d aproximacion.
-  q(1) = 1.0,
-  7     q(2) = 0.0,
-  8     q(3) = 0.0
 
-  Vemos que despues de esto se levanta la degeneración: LO-TO splitting se llama esto.
+Faltan cosas en todos los inputs. Están comentadas las líneas faltantes. Tratar de hacerlo solitos Bb. Análogo al 1b.
 
-\subsection{Ex 2b}
+Al acercarnos a gamma tenemos el splitting LO-TO.
 
-  Faltan cosas en todos los inputs. Están comentadas las líneas faltantes. Tratar de hacerlo solitos Bb. Análogo al 1b.
 
-  Al acercarnos a gamma tenemos el splitting LO-TO.
 
 \subsection{Ex 3}
 

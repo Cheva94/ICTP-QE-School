@@ -177,6 +177,14 @@
       Hubbard\_V(3,3,1) = 1.d-8
   Then use the HP code to compute U and V - see example here: QE/HP/examples/example10
 
+  \definicion{I have some questions regarding example1 (DFT+U):
+    1) Does U parameter depend on q-mesh (and so we should test convergence)?
+    2) I don't completely understand why we always run scf before running nscf (since both begin from scratch).}
+
+  1) Yes
+
+  2) NSCF does not start from scratch, it reads the data produced by SCF
+
 \section{Hands-on}
 
 \definicion{Topic:} Functionals.
@@ -206,14 +214,14 @@
   La nscf es para tener la PDOS. Con $nbnd = 35$ agrega más antiestados para que la cosa salga linda. Vemos que para el átomo 1 el spin up (spin 1) está prácticamente lleno, pero spin down (spin 2) tiene ocupaciones parciales (0.2). En el segundo hierro tenemos las cosas invertidas.
     \begin{figure}[H]
         \centering
-        \includegraphics[scale = 0.5]{figs/D4/LAD+U.png}
+        \includegraphics[scale = 0.5]{figs/D4/LDA+U.png}
     \end{figure}
 
   Esto se refleja en la PDOS: la majority está toda por debajo de la Fermi y para la minority tenemos un poco abajo y otro poco arriba de la energía de Fermi. Vemos entonces que al hacer DFT estándar el sistema es metálico.
 
   \begin{figure}[H]
       \centering
-      \includegraphics[scale = 0.5]{figs/D4/FeO_pre.png}
+      \includegraphics[scale = 0.25]{figs/D4/FeO_pre.png}
   \end{figure}
 
   Ahora vamos a calcular el valor de la U de Hubbard, partiendo desde el valor casi nulo que le hemos asignado. Luego
@@ -230,6 +238,18 @@
   Ahora usamos el valor obtenido para hacer una corrida DFT+U: modificamos los inputs $pw.FeO.scf.in$ y $pw.FeO.nscf.in$ cambiando los valores de la U de Hubbard a 4.6 (eV). En este caso estos valores hacen referencia a los estados 3d de ambos hierros. Luego hacer los mismos pasos que antes.
 
   Vemos que cuando hacemos la corrección Hubbard ahora tenemos que el sistema es un aislante ya que se nos presenta el bandgap, lo cual es experimentalmente correcto.
+
+  \begin{figure}[H]
+    \centering
+      \includegraphics[scale = 0.5]{figs/D4/FeO.png}
+    \end{figure}
+
+  \Obs{Para lograr caer en este mínimo debemos distribuir el programa en pocos cores o hacer lo siguiente:
+  \begin{figure}[H]
+    \centering
+      \includegraphics[scale = 0.5]{figs/D4/ayuda.png}
+    \end{figure}
+  }
 
 \subsection{DFT+hybrids}
 
@@ -267,14 +287,14 @@
       \end{itemize}
     \item Considerando vdW de manera no local:
       \begin{itemize}
-        \item `input_dft = 'vdw-DF'`    @PBE pseudo (non-local)
-        \item `input_dft = 'vdw-DF2'`   @PBE pseudo (non-local)
-        \item `input_dft = 'rVV10'`     @PBE pseudo (non-local)
+        \item `input\_dft = 'vdw-DF'`    @PBE pseudo (non-local)
+        \item `input\_dft = 'vdw-DF2'`   @PBE pseudo (non-local)
+        \item `input\_dft = 'rVV10'`     @PBE pseudo (non-local)
       \end{itemize}
     \item Considerando vdW de manera semiempírico:
       \begin{itemize}
-        \item `vdw_corr  = 'DFT-D'`     @PBE pseudo (semi-empirical)
-        \item `vdw_corr  = 'DFT-D3'`    @PBE pseudo (semi-empirical)
+        \item `vdw\_corr  = 'DFT-D'`     @PBE pseudo (semi-empirical)
+        \item `vdw\_corr  = 'DFT-D3'`    @PBE pseudo (semi-empirical)
       \end{itemize}
   \end{itemize}
 
@@ -285,4 +305,4 @@
       \includegraphics[scale = 0.5]{figs/D4/vdW.png}
   \end{figure}
 
-  La distancia de equilibrio entre layers es muy pequeña con LDA y muy larga con GGA. Esto indica que debemos considerar vdW. ¿Cuál es la mejor? Habría que hacer test de convergencia primero. 
+  La distancia de equilibrio entre layers es muy pequeña con LDA y muy larga con GGA. Esto indica que debemos considerar vdW. ¿Cuál es la mejor? Habría que hacer test de convergencia primero.
