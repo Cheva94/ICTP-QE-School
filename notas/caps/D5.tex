@@ -170,6 +170,10 @@
 
   Type of  pseudopotential have nothing to do with imaginary frequencies.
 
+  \definicion{For phonon calculations to obtain the frequencies, how do I choose the q mesh? What do I follow to check for convergence?}
+
+  You should in principle to check the convergence of the dispersion with respect to the size of the q-mesh. In order to do that, you can rerun the ph-q2r-matdyn chain of calculations for a different size of the mesh, which you specify in the input file of ph.x (nq1, nq2, nq3 variables). Then, you check how the dispersions look like and you compare each dispersion. As a rule of thumb, if the frequencies change by about or less than 10 cm-1 (few cm-1 is fine) the convergence of the interpolation is reasonable
+
 \section{Hands-on}
 
   \definicion{Topic:} DFPT.
