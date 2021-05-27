@@ -216,7 +216,9 @@
 
   No. Calculations provide all the transition peaks present in the user-specified frequency range with the user-specified interactions treatment.
 
-  
+  \definicion{hello, in many cases in Hands-on, we performed the postprocessing, we just calculate SCF and I assume that we have to perform the relax optimization before? am I right?}
+
+  Yes, one has to optimize the structure before and then compute the spectrum. But in this hands-on, we skip this step in the interest of time
 
 \section{Hands-on}
 
@@ -224,32 +226,78 @@
 
   \definicion{Speaker:}	Iurii TIMROV (EPFL, Switzerland), Oscar BASEGGIO (SISSA, Italy).
 
-\subsection{Example 1}
+\subsection{Espectro de absorción de benceno: método de Casida-Davidson}
 
-  Habla muy lento y estuve perdido arreglando el ingreso al cluster. REVISAR.
+  El ejecutable turbo\_davidson.x permite calcular el espectro de absorción de moléculas utilizando TDDFPT. Las interacciones electrónicas, tante de Hartree como XC, son tenidas en cuenta o despreciadas según $if\_dft\_spectrum$ (.true. es para IPA).
 
-  Switch on the electronic interaction (Hartree and Exchange-Correlation)
+  Vamos a partir desde IPA (Independent Particle Approxmation) hacia electrones interactuantes. En el contexto de la IPA se tiene una suma de excitaciones independientes desde estados ocupados hacia estados vacíos.
 
-  El pico en torno a 8 eV es la siguiente excitación (de mayor energía).
+  Como siempre arrancamos calculando el estado fundamental, pero ahora debemos aclarar $nbnd$ para pedirle explícitamente al código que calcule estados vacíos. Luego calculamos la respuesta lineal en IPA.
+    \begin{verbatim}
+      turbo_davidson.x < turbo_davidson.benzene.in > turbo_davidson.benzene.out
+    \end{verbatim}
 
-  Tarda bastante más en hacer la turbo davidson ahora: de segundos a 6 minutos pasó.
+  Finalmente calculamos el espectro.
+    \begin{verbatim}
+      turbo_spectrum.x < turbo_spectrum.benzene.in > turbo_spectrum.benzene.out
+    \end{verbatim}
 
-  El de interacciones es un pico mini en torn a las 6.5 eV.
+  La resonancia más intensa corresponde a la primera excitación (diferencia entre LUMO y HOMO). La resonancia en torno a 8 eV es la siguiente excitación de mayor energía.
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale = 0.6]{figs/D6/Benceno_IPA.png}
+    \end{figure}
 
+  Ahora vamos a prender las interacciones electrónicas. Para ello hay que modificar los inputs:
+    \begin{itemize}
+      \item En $turbo\_davidson.benzene.in$ poner
+        \begin{itemize}
+          \item if\_dft\_spectrum = .false.
+          \item num\_eign = 15
+          \item num\_init = 30
+          \item num\_basis\_max = 90
+          \item start = 0.0
+          \item finish = 1.0
+          \item step = 0.001
+          \item broadening = 0.004
+        \end{itemize}
+      \item En $turbo\_spectrum.benzene.in$ poner $eign\_file = 'Benzene.eigen'$
+      \item En $plot\_spectrum.gp$ cambiar la última línea por
+        \begin{verbatim}
+          "Benzene.plot.dat" u ($1)*13.6:($3) w l lw 2 lt rgb "blue" title 'with interactions', \
+         "reference/no_interaction/Benzene.plot.dat" u ($1)*13.6:($3) w l lw 2 lt rgb "red" title 'no interactions'
+        \end{verbatim}
+    \end{itemize}
+
+  Luego repetir los mismos pasos que antes. Vemos que el cálculo de respuesta lineal tarda mucho más que en IPA. La resonancia se corre hacia valores más altos ya que las interacciones aumentan el gap.
   \begin{figure}[H]
       \centering
-      \subfigure[\empty]{\includegraphics[scale = 0.6]{figs/D6/C6H6_pre.png}}
-      \subfigure[\empty]{\includegraphics[scale = 0.6]{figs/D6/C6H6_post.png}}
-      \caption{antes y después}
+      \includegraphics[scale = 0.6]{figs/D6/Benceno_inter.png}
   \end{figure}
 
-\subsection{Example 2}
+\subsection{Espectro de absorción de benceno: método de Lanczos}
+
+  Espectro total a bajo costo para electrones interactuantes.
 
   Esoectro: se pueden poner menos de la cantida total de iteraciones hechas, pero no más.
 
   A mayor cantidad de iteraciones va cambiando la ubicación de los picos. También cambian sus intensidades. Esto habla de que el espectro no está convergedio correctamente: hay que hacer más iteraciones o hacer un truco.
 
   Para el truco ver qué le pasa el beta de Lancszos: una extrapolación que aumenta el número de coeficientes sin calcularlos.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \subsection{Example 3}
 
