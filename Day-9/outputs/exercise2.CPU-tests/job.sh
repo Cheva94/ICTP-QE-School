@@ -1,0 +1,23 @@
+#!/bin/bash
+#SBATCH --nodes=1              # number of nodes
+#SBATCH --ntasks-per-node=16   # number of MPI per node
+#SBATCH --cpus-per-task=4      # number of HW threads per task (equal to OMP_NUM_THREADS*4)
+#SBATCH --mem=230000MB
+#SBATCH --time 00:30:00        # format: HH:MM:SS
+#SBATCH --reservation=s_tra_qe
+#SBATCH -A tra21_qe
+#SBATCH -p m100_usr_prod 
+#SBATCH -J qeschool
+
+module load    hpc-sdk/2020--binary    spectrum_mpi/10.3.1--binary   fftw/3.3.8--spectrum_mpi--10.3.1--binary  
+
+export QE_ROOT=/m100_scratch/usertrain/a08trd1f/Day-9/exercise1.CPU-setup/qe-cpu/
+
+export PW=$QE_ROOT/bin/pw.x
+
+export OMP_NUM_THREADS=1
+
+mpirun  ${PW} -npool 1 -ndiag 4 -inp pw.CuO.scf.in | tee pw.CuO.scf.npool01.ndiag04.log 
+mpirun  ${PW} -npool 2 -ndiag 4 -inp pw.CuO.scf.in | tee pw.CuO.scf.npool02.ndiag04.log 
+mpirun  ${PW} -npool 4 -ndiag 4 -inp pw.CuO.scf.in | tee pw.CuO.scf.npool04.ndiag04.log 
+mpirun  ${PW} -npool 8 -ndiag 4 -inp pw.CuO.scf.in | tee pw.CuO.scf.npool08.ndiag04.log 
