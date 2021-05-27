@@ -280,39 +280,72 @@
 
 \subsection{Materiales polares: AlAs}
 
-  Ahora tenemos un aislante polar por lo que aparece una contribución no analítica. En el input del ph.x tengo que poner $epsil = .true.$ para que haga el cálculo con el campo elécctrico que hace falta.
+  Vamos a calcular para AlAs las frecuencias fonónicas en el punto $\Gamma$ (example2a) y la dispersión fonónica (example2b).
 
 \subsubsection{Punto $\Gamma$}
 
-  ----------
+  Primero vamos a calcular los fonones en $\Gamma$. Dentro de la carpeta tenemos:
+    \begin{itemize}
+      \item $pw.AlAs.in \Rightarrow$ SCF del estado fundamental.
+        \begin{verbatim}
+          mpirun -np 2 pw.x < pw.AlAs.in > pw.Si.out
+        \end{verbatim}
+      \item $ph.AlAs.in \Rightarrow$ cálculo de fonones en $\Gamma$.
+      \begin{verbatim}
+        mpirun -np 2 ph.x < ph.Si.in > ph.Si.out
+      \end{verbatim}
+      \item $dynmat.AlAs.in \Rightarrow$ imposición de la ASR junto a la adición de la separación no analítica LO-TO (Longitudinal Optical - Transversed Optical).
+      \begin{verbatim}
+          mpirun -np 2 dynmat.x < dynmat.AlAs.in > dynmat.AlAs.out
+      \end{verbatim}
+    \end{itemize}
 
-todavía no le pusimos la parte del polar insulatro. Sólo esamos calculando un aparte (Ver cual era). No aparecen las separaciones LO-TO: las 3 freq opticas están degeneradas dada la simetría del sistema. Cuadno se incluye le termino no analitico, aparece spliting. (efecto stark?)
+  Ahora tenemos un semiconductor polar por lo que aparece una contribución no analítica en $q=0$. En el input del ph.x tengo que poner $epsil = .true.$ para que haga el cálculo con el campo elécctrico que hace falta y así determinar las cargas efectivas y el tensor dieléctrico.
 
-dynmat ahora le especificamos los vecotres que sacamos (las que no están en la parte analitica). Al no ser analitica debemos decirle a direccion d aproximacion.
-q(1) = 1.0,
-7     q(2) = 0.0,
-8     q(3) = 0.0
+  El programa ph.x sólo calcula la parte analítica de la matriz dinámica, \emph{i.e.} todavía no incorporamos la corrección para $q=0$. Luego, no aparece aún la separación LO-TO: las 3 frecuencias ópticas están degeneradas dada la simetría del sistema. Vemos además que los modos acústicos no son idénticamente nulos como debería ser.
 
-Vemos que despues de esto se levanta la degeneración: LO-TO splitting se llama esto.
+  \begin{figure}[H]
+      \centering
+      \includegraphics[scale = 0.6]{figs/D5/AlAs_pre.png}
+  \end{figure}
+
+  Como vimos en el ejemplo anterior, cada vez que queremos incluir una correción en la matriz dinámica, debemos ejecutar dynmat.x: ahora en el input incluimos el vector $q$ que determina al dirección  de aproximacion al punto $\Gamma$. En este caso nos estamos acercando a lo largo del semieje x positivo.
+    \begin{verbatim}
+      q(1) = 1.0, q(2) = 0.0, q(3) = 0.0
+    \end{verbatim}
+
+  Al incluir el término no analítico se levanta la degeneración de los modos ópticos: tenemos el LO-TO spliting.
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale = 0.6]{figs/D5/AlAs_post.png}
+    \end{figure}
 
 \subsubsection{Dispersión fonónica}
 
+  Si calculamos la dispersión fonónica completa de AlAs, podremos ver el splitting LO-TO en las proximidades de $\Gamma$.
 
-Faltan cosas en todos los inputs. Están comentadas las líneas faltantes. Tratar de hacerlo solitos Bb. Análogo al 1b.
+  \Obs{Los inputs tienen ariables faltates. Aquello que falta está con un comentario al lado.}
 
-Al acercarnos a gamma tenemos el splitting LO-TO.
+  Vemos que en torno al $\Gamma$ ocurre el LO-TO splitting.
 
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale = 0.4]{figs/D5/AlAs_disp.png}
+    \end{figure}
 
+\subsection{Materiales 2D: BN hexagonal}
 
-\subsection{Ex 3}
+  Vamos a calcular la dispersión fonónica para el caso de BN hexagonal. Los pasos a realizar son los mismos que antes. Vemos que en el input de pw.x está $assume\_isolated='2D'$ lo cual permite eliminar la interacción dipolo dipolo entre las capaz del material si es que existieran. Además está $loto\_2d=.true.$ tanto para q2r.x como para matdyn.x para que no desaparezca, si existe, la separación LO-TO.
 
-  Hacer el ex3 solos tambien
+  \Obs{No corre en los 20 CPU, así que hay que poner NPROC=8 antes del mpirun. Una alternativa al $assume\_isolated$ es ir aumentando el vacío entre láminas y vamos viendo que el spliting va disminuyendo de ancho. Esto no es muy sensato computacionalmente ya que el ancho de la separación tiende a cero de manera lineal en una log-log.}
 
-  No trabaja con 20 procesores. Sí trabaja con 8.
+  Vemos algunas catacterísticas propias de materiales 2D:
+    \begin{itemize}
+      \item El tercer modo acústico no crece lineal sino cuadrático al alejarse de $\Gamma$ (flexural mode).
+      \item No hay LO-TO splitting en $\Gamma$ a pesar de ser un material polar.
+    \end{itemize}
 
-
-  ver los libros sugeridos. Uno es el cenizas para lo general y otro es de FOx para lo de la separacion LO-TO.
-
-----
-
-La carpeta que borre que "estaba vacía" en relidad tenía archivos ocultos!! son las configuraciones y gilada que robe de la VM.
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale = 0.4]{figs/D5/BN_disp.png}
+    \end{figure}
