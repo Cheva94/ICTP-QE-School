@@ -4,6 +4,116 @@
 
   \definicion{Speaker:} Pietro BONFA' (University of Parma, Italy).
 
+\subsection{Computación paralela}
+
+  La ley de Amdahl establece que si una tarea lleva un tiempo $T$ en correr secuencial, donde la porción paralelizable es $p$, volviéndose $s$ veces más rápida, luego la tarea orginal ahora tarda
+    $$T_p = (1-p) T + \frac{p}{s} T$$
+
+  La aceleración total será $S = \sfrac{T}{T_p}$ por lo que
+    $$S = \frac{1}{1-p + \frac{p}{s}}$$
+
+  [...]
+
+\subsection{MPI}
+
+  Para indicar que vamos a usar MPI (Message Passage I) usamos el comando $mpirun$ seguido de la cantidad de N procesadores $-np\ N$. Esto genera $N$ instancias separadas del programa y completamente independientes, cuya única interacción es a través de mensajes. Cada una de estas instancias entonces ocupa un procesador y allocated memory, debiendo garantizar la posibilidad de comunicarse mediante mensajes sin importar la separación física entre los procesadores utilizados.
+
+  [...]
+
+
+\subsection{OpenMP}
+
+  Me permite paralelizar mediante $H$ hilos. La diferencia es que no hacen falta mensajes ya que todos los hilos tienen la misma allocated memory. Conviene dar la cantidad adecuada de procesadores en función de la cantidad de hilos.
+    \begin{verbatim}
+      export OMP_NUM_THREADS = H
+    \end{verbatim}
+
+  Para garantizar que tanto OpenMP como MPI funcionen de manera correcta, debo dar un total de $P*H$ procesadores.
+
+
+\subsection{Descomposicón de datos}
+
+  Hay 3 cantidades que nos interesan para saber cómo podemos repartir los datos:
+    \begin{enumerate}
+      \item Cantidad de PW (vectores $\vec{G}$).
+      \item Cantidad de puntos $k$ (cálculos periódicos).
+      \item Cantidad de estados KS (cantidad de electrones).
+    \end{enumerate}
+
+  Donde más información hay para repartir usualmente es en la cantidad de PW. En cambio, cuanto mayor es la supercelda, menor es el espacio recíproco asociado, lo que lleva a que la $k$-mesh sea menor: a mayor supercelda, pierdo capacidad de repartir según los puntos $k$.
+
+  [...]
+
+  Ver qué hace QE por default [...] (¿parte en términos de PW?). El problema es que esto lleva a una gran cantidad de comunicación a través de mensajes, ocupando mucho tiempo.
+
+  Repartir respecto a los puntos $k$. Trabajar en muchos puntos $k$ al mismo tiempo requiere menos comunicación, pero requiere más memoria: cada punto $k$ tiene que allocate TODA la función de onda. Esto puede hacer que nos quedemos sin memoria. Además podemos tener load unbalance: tener procesadores idle durante el proceso.
+
+  Lo mejor es entonces partir la fución de onda entre múltiples procesadores y separar el trabajo en puntos $k$. Esto lleva a menos comunicación y un uso óptimo de memoria, lo cual a su vez da un load unbalance reducido.
+
+  [...]
+
+
+\subsection{Sticks}
+
+  No conviene tener pocos sticks, porque esto provocaría muchísimas comunicaciones cortas entre procesadores.
+
+
+\subsection{Niveles de paralelismo}
+
+  La organización jerárquica dentro de QE para el paralelismo es
+  [...]
+
+  Primero separa en $k$-points groups y luego separa en band groups.
+
+  En realidad esto es para pw.x. Otros códigos de QE explotan otro nivel previo de paralelismo: image groups.
+
+\subsection{Fine grain parallelization}
+
+  Diagonalización paralela: la diagonalización dentro del programa es de manera iterativa. Cada opción de paralelización se distingue en su velocidad, escaleo y memoria. PPCG optimiza memory allocation y velocidad.
+
+  Davidson: hay que preocuparse por el problema de autovalores cuando el sistema a resolver es grande (inputs largos). [ver figura que muestra cómo escalea el problema]. Si se usa paralelización en cosas chicas pierde mucho tiempo en comunicaciones.
+
+\subsection{Image parallelism}
+
+  Útil para neb.x o para ph.x [...]
+
+  Ver pros y cons.
+    \begin{verbatim}
+      -nimage I
+    \end{verbatim}
+
+\subsection{Pools}
+
+  Cuántos grupos de CPU estarán trabajando en múltiples $k$-points. Esto reduce las comunicaciones.
+
+  memory allocation
+
+  [...]
+
+  \begin{verbatim}
+    -npool P
+  \end{verbatim}
+
+\subsection{Diagonalización}
+
+  Más chico que el tamaño del band group.
+
+  \begin{verbatim}
+    -ndiag Y
+  \end{verbatim}
+
+\subsection{Encontrar el balance}
+
+
+\subsection{Librerías}
+
+
+\subsection{I/O}
+
+
+\subsection{GPU: CUDA y sistemas híbridos}
+
+
 \section{Q\&A}
 
 \section{Hands-on}
@@ -11,3 +121,61 @@
   \definicion{Topic:} QE on HPC and GPU systems.
 
   \definicion{Speaker:} Pietro BONFA' (University of Parma, Italy), Ivan CARNIMEO (SISSA, Italy).
+
+  Primero vamos a ver cómo optimizar el paralelismo en CPU y después vamos a ver qué onda con GPU.
+
+  Las corridas son pequeñas con fines del hand-on, entonces no se ven cambios drásticos. Pero la movida es aprender la idea base para después trasladarla a otros cálculos.
+
+
+\subsection{Ex 1}
+
+  module list nos tira qué modulos Hay
+
+
+\subsection{Ex 2}
+
+  pool - paralelización a nivel de puntos K - menos tiempo ocupado en comunicaciones
+
+  diag - paralelizacion a nivel de diagonalizacion de matriz
+
+
+  El wall time tiene en cuenta comunicaciones y otras cosas. Cuestión que tiene en cuenta todas las latencias. Este tiene que ser el que se sigue.
+
+
+  Aumentando el pool a igual cantidad de mpi, las comunicaciones bajan. ver figura.
+
+  Ver figura de cómo se distribuye la cuestion.
+
+  Las comunicaciones entre mpis suele darse a lo largo de la dimensión de PW ya que necesito extraer propiedades a patir de toda la función de onda.
+
+  Cuando paralelizo a lo largo de PW y puntos k, ver cómo se reducen las comunicaciones. No necesitan hablarse todos los procesadores entre sí.
+
+  Evitar que los pools se repartan entre nodes, porque ahí sí van a tener que comunicarse y se pierde performance.
+
+  MPI  -- divido la memoria: la data se distribuye en batchs. (1 core por batch)
+
+  OpenMP -- la data no se distribuye, pero tengo varios hilos trabajando sobre ese gran batchs
+
+\subsection{Ex 3}
+
+
+\subsection{Ex 4}
+
+
+\subsection{Ex 5}
+
+---------------------------------------------
+
+  about npool on gpus, should we careful on picking a integer fraction of number of cores of the gpu this time? Or should it still be a integer of the cpu cores?
+
+  when u r using poool hay que tener cuidados con mpi y cuando se usan gpu el numero de mpi está acotado por el numero de gpus. ver la respuesta de ivan al final.
+
+
+
+--------------------------------------------
+
+  Ver respuesta de ivan a la paralelización de bandas.
+---------
+
+
+scp -r USER@login01-ext.m100.cineca.it:/m100_scratch/usertrain/USER/Day-9 . 
