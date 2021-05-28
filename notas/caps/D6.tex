@@ -242,10 +242,10 @@
       turbo_spectrum.x < turbo_spectrum.benzene.in > turbo_spectrum.benzene.out
     \end{verbatim}
 
-  La resonancia más intensa corresponde a la primera excitación (diferencia entre LUMO y HOMO). La resonancia en torno a 8 eV es la siguiente excitación de mayor energía.
+  La resonancia más intensa corresponde a la primera excitación (diferencia entre LUMO y HOMO). La resonancia cerca de 8 eV es la siguiente excitación de mayor energía.
     \begin{figure}[H]
         \centering
-        \includegraphics[scale = 0.6]{figs/D6/Benceno_IPA.png}
+        \includegraphics[scale = 0.4]{figs/D6/Benceno_IPA.png}
     \end{figure}
 
   Ahora vamos a prender las interacciones electrónicas. Para ello hay que modificar los inputs:
@@ -264,65 +264,157 @@
       \item En $turbo\_spectrum.benzene.in$ poner $eign\_file = 'Benzene.eigen'$
       \item En $plot\_spectrum.gp$ cambiar la última línea por
         \begin{verbatim}
-          "Benzene.plot.dat" u ($1)*13.6:($3) w l lw 2 lt rgb "blue" title 'with interactions', \
-         "reference/no_interaction/Benzene.plot.dat" u ($1)*13.6:($3) w l lw 2 lt rgb "red" title 'no interactions'
+          "Benzene.plot.dat" u ($1)*13.6:($3) w l lw 2 lt rgb "blue" title
+          'with interactions', \
+         "reference/no_interaction/Benzene.plot.dat" u ($1)*13.6:($3) w l lw 2
+         lt rgb "red" title 'no interactions'
         \end{verbatim}
     \end{itemize}
 
   Luego repetir los mismos pasos que antes. Vemos que el cálculo de respuesta lineal tarda mucho más que en IPA. La resonancia se corre hacia valores más altos ya que las interacciones aumentan el gap.
   \begin{figure}[H]
       \centering
-      \includegraphics[scale = 0.6]{figs/D6/Benceno_inter.png}
+      \includegraphics[scale = 0.4]{figs/D6/Benceno_inter.png}
   \end{figure}
 
 \subsection{Espectro de absorción de benceno: método de Lanczos}
 
-  Espectro total a bajo costo para electrones interactuantes.
+  El ejecutable turbo\_lanczos.x permite calcular el espectro total a bajo costo y considerando electrones interactuantes ya que no necesita considerar estados vacíos. Además el espectro completo se determina con un único cálculo.
 
-  Esoectro: se pueden poner menos de la cantida total de iteraciones hechas, pero no más.
+  Como no se neceistan estados vacíos, no es necesario poner $nbnd$ en el input de pw.x.
 
-  A mayor cantidad de iteraciones va cambiando la ubicación de los picos. También cambian sus intensidades. Esto habla de que el espectro no está convergedio correctamente: hay que hacer más iteraciones o hacer un truco.
+  \Obs{No se pueden analizar las transiciones desde estados ocupados hacia estados vacíos: para eso se usa el turbo\_davidson.x.}
 
-  Para el truco ver qué le pasa el beta de Lancszos: una extrapolación que aumenta el número de coeficientes sin calcularlos.
+  En el input de turbo\_lanczos.x tenemos:
+    \begin{itemize}
+      \item restart\_step le dice al código cada cuántos pasos escribir un restar file.
+      \item restart le dice si hacer restart o no.
+      \item itermax indica la cantidad de iteraciones de Lanczos.
+      \item ipol le dice la dirección de polarización de la luz incidente ($1=x$).
+    \end{itemize}
 
+  En el output va mostrando los coeficientes de Lanczos para cada iteración.
+  \begin{figure}[H]
+      \centering
+      \includegraphics[scale = 0.4]{figs/D6/Lanczos_coef.png}
+  \end{figure}
 
+  En el input de turbo\_spectrum.x vemos itermax0: este valor está acotado superiormete por la cantidad de iteraciones que hayamos usado para turbo\_lanczos. La variable itermax ahora está igual que itermax0 porque no vamos a hacer extrapolaciones: cuando se hacen extrapolaciones, estas dos variables tienen valores diferentes. La variable epsil es el ancho de la Lorentziana.
 
+  Luego de todo los cálcuos, vemos el espectro obtenido a partir de 500 iteraciones. Vemos que se obtuvo el espectro completo de una sóla vez.
+  \begin{figure}[H]
+      \centering
+      \includegraphics[scale = 0.3]{figs/D6/Lanczos_500.png}
+  \end{figure}
 
+  Ahora vamos a hacer test de convergencia para saber si el espectro es correcto. Hay dos maneras de hacerlo: con y sin extrapolación.
 
+  Primero la haremos sin extrapolar. Para eso hay que cambiar en el input de turbo\_lanczos $restart = .true.$ así arranca desde donde dejó y no consumimos tanto tiempo.
 
+  Vemos que a medida que aumentan la cantidad de iteraciones, los picos siguen cambiando tanto de intensidad como de ubicación. Esto habla de que el espectro no está convergedio correctamente: faltaría hacer aún más iteraciones, lo cual puede llevar muchísimo tiempo.
 
+  \begin{figure}[H]
+      \centering
+      \includegraphics[scale = 0.6]{figs/D6/Lan_no_extra.png}
+  \end{figure}
 
+  Vamos a hacer una alternativa. Los coeficientes de Lanczos $\beta$ se estabilizan en un comportamiento oscilaorio en torno a la mitad del cutoff de energía cinética. Luego, estos coeficientes pueden ser extrapolados.
 
+  \begin{figure}[H]
+      \centering
+      \includegraphics[scale = 0.4]{figs/D6/betas.png}
+  \end{figure}
 
+  \begin{figure}[H]
+      \centering
+      \subfigure[500 iteraciones]{\includegraphics[scale = 0.13]{figs/D6/Lanczos_500.png}}
+      \subfigure[1000 iteraciones]{\includegraphics[scale = 0.13]{figs/D6/Lanczos_1000.png}} \\
+      \subfigure[1500 iteraciones]{\includegraphics[scale = 0.13]{figs/D6/Lanczos_1500.png}}
+      \subfigure[2000 iteraciones]{\includegraphics[scale = 0.13]{figs/D6/Lanczos_2000.png}} \\
+      \subfigure[2500 iteraciones]{\includegraphics[scale = 0.13]{figs/D6/Lanczos_2500.png}}
+  \end{figure}
 
+  El proceso de extrapolación consta de aumentar la cantidad de coeficientes sin explícitamente calcularlos. A mayor cantidad de puntos bien calculados, mejores serán los resultados de la extrapolación.
 
+  \begin{figure}[H]
+      \centering
+      \includegraphics[scale = 0.45]{figs/D6/extrapol.png}
+  \end{figure}
 
+  Usado 2500 puntos calculados y una extrapolación de 30000 se obtiene el siguiente espectro.
 
+  \begin{figure}[H]
+      \centering
+      \includegraphics[scale = 0.30]{figs/D6/Lanczos_conv.png}
+  \end{figure}
 
-\subsection{Example 3}
+  \Obs{TurboLanczos con ipol=4 y turboDavidson generarán exactamente el mismo espectro siempre y cuando ambos métodos sean convergentes.}
 
-  Los dos primeros estudiaban una molécula. Ahora vamos a estudiar un sólido.
+  \begin{figure}[H]
+      \centering
+      \includegraphics[scale = 0.6]{figs/D6/Lan_extra.png}
+  \end{figure}
 
-  El calculator le dice si usar Lancszos o Sternheimer.
+\subsection{EELS: método de Lanczos}
 
-  q1, q2 y q3: componentes de la transferencia de momento.
+  Vamos a calcular el EELS (Electron Energy Loss Spectra) de Si bulk usando el código turbo\_eels.x con el algoritmo de Lanczos.
 
-  [me fui un buen tiempo]
+  \Obs{Los dos primeros ejemplos estudiaban una molécula, pero ahora vamos a estudiar un sólido.}
 
-  Siempre conviene hacer extrapolación porque ahorra una banda de tiempo.
+  Notamos que la $k$-mesh para el pw.x tiene que ser densa. Para el input de turbo\_eels.x tenemos que poner 'lanczos' en la variable calculator para indicar el algoritmo a utilizar. Luego en q1, q2 y q3 le indicamos las componentes del momento transferido.
+    $$\vec{q} = \frac{2\pi}{a} \left(q_1, q_2, q_3\right)$$
 
-  La definición del plasmon dice que el pico (de la imaginaria) ocurre en torno a la raíz de la parte real con pendiente positiva. Cuando la pendiente es negativa hay picos en le epsilon imaginaria.
+  Para calcular el espectro debemos poner $eels = .true.$, sino calculará el de absorción. Se ve que el espectro no converge con 500 iteraciones dadas las ocilaciones no físicas que presenta (hay muchisimos picos y eso no debería ser así). Por los mismos motivos que antes conviene extrapolar.
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale = 0.30]{figs/D6/EELS_L_500.png}
+    \end{figure}
 
-\subsection{Example 4}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale = 0.7]{figs/D6/EELS_no_extra.png}
+    \end{figure}
 
-  Ejemplo más complejo de toda la escuela. Dos métodos bien distintos dan lugar a exactamente el mismo espectro.
+  Aumentamos las iteraciones y, además, extrapolamos. Vemos que ahora sí es convergente.
 
-  No tenemos las iteraciones (específicas de Lanczos), pero mantenemos las coordendasd del vector q. Hay otras palabras claves.
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale = 0.30]{figs/D6/EELS_L.png}
+    \end{figure}
 
-  Tarda unas 2 horas ya que no está del todo optimizado el código todavía.
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale = 0.7]{figs/D6/EELS_extra.png}
+    \end{figure}
 
-  Dan igual espectro, pero el Lanczos le pasa el trapo en velocidad al Sternheimer. Aparece discreto porque hace un cálculo por frecuencia. Para tener un espectro más denso: más caro que eia.
+  La definición del plasmon dice que el pico (de la imaginaria) ocurre en torno a la raíz de la parte real con pendiente positiva. Cuando la pendiente es negativa hay picos en la epsilon imaginaria.
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale = 0.7]{figs/D6/plasmon.png}
+    \end{figure}
 
-  Obviamente que la convergencia de la k mesh hacerla con Lanczos. AL principio no es smooth pero a medida que avanza se suaviza.
+\subsection{EELS: método de Sternheimer}
+
+  Vamos a calcular el EELS (de Si bulk usando el código turbo\_eels.x con el algoritmo de Sternheimer.
+
+  Este algoritmo es extremadamente lento (tarda unas 2 horas). Su implementación es reciente y no está completamente optimizado. Se trata del ejemplo más complejo de toda la escuela.
+
+  No tenemos las iteraciones (específicas de Lanczos), pero mantenemos las coordendas del vector q. Hay otras palabras claves.
+
+  Vemos que da igual al espectro de antes, pero el Lanczos le pasa el trapo en velocidad al Sternheimer. Además, aparece discretizado porque hace un cálculo por frecuencia: tener un espectro más denso es muy caro.
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale = 0.7]{figs/D6/Ster.png}
+    \end{figure}
+
+  Obviamente que la convergencia de la $k$-mesh hacerla con Lanczos. Al principio no es smooth pero a medida que avanza se suaviza.
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale = 0.7]{figs/D6/kmesh.png}
+    \end{figure}
 
   Dispersión plasmónica: el espectro va cambiando según el valor de la transferencia de momento. La dispersión plasmónica es la parábola que se forma al tomar las intensidades de los picos.
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale = 0.65]{figs/D6/disp.png}
+    \end{figure}

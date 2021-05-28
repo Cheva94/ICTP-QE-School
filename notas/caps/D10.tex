@@ -4,6 +4,57 @@
 
   \definicion{Speaker:} Marnik BERCX, EPFL Switzerland.
 
+\subsection{Desafíos}
+
+  \begin{itemize}
+    \item Automatización de workflows complejos y escalables con un buen error handling.
+    \item Guardado eficiente y confiable.
+    \item Reproducibilidad al guardar todo el camino
+  \end{itemize}
+
+  AiiDA es una infraestructura computacional para high throughput worjflows con full data provenance.
+
+\subsection{Receta base}
+
+
+
+  % \begin{figure}[H]
+  %     \centering
+  %     \includegraphics[scale = 0.6]{figs/D10/.png}
+  % \end{figure}
+
+  Provenance graph.
+
+\subsection{Turn-key workflows}
+
+  \begin{itemize}
+    \item Codificar los pasos necesarios para calcular una propiedad.
+    \item Inputs y outputs autodocumentados.
+    \item Modular: se pueden intercalar diferentes workflows.
+    \item Input validation.
+    \item Error handling: intenta arreglar los cálculos fallidos on-the-fly, modificando los inputs.
+    \item Protocols: cálculos por default de ciertos parámetros con precisión razonable.
+  \end{itemize}
+
+\subsection{AuuDAlab}
+
+  Acceso a las simulaciones en la nube.
+
+\subsection{Plug-ins}
+
+  No sólo aplicable a QE sino a una gran cantidad de otros códigos de cálculo.
+
+\subsection{Interoperabilidad}
+
+  Permite correr un mismo tipo de cálculo en distintas plataformas.
+
+\subsection{Materials cloud}
+
+  AiiDA es el motor de cálculo y materials clouds permite difundir la información.
+
+
+  provenance = procedencia
+
 \section{Q\&A}
 
 \section{Hands-on}
@@ -11,3 +62,13 @@
   \definicion{Topic:} AiiDA.
 
   \definicion{Speaker:}	Marnik BERCX, EPFL, Switzerland.
+
+\subsection{}
+
+  Cada nodo tiene dos identificadores únicos: UUID (Universally Unique Identifier) o PK/Id (Primary Key). La diferencia es que PK es local para la database, mientras que UUID es global, pudiendo ser usado con diferentes databases.
+
+  Todo lo que se hace después se hace en base a estos identificadores.
+
+  https://aiida-tutorials.readthedocs.io/en/tutorial-qe-short/
+
+  Ver tutorial de Julio de AiiDA
