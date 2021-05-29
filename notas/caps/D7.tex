@@ -50,7 +50,7 @@
         \includegraphics[scale = 0.5]{figs/D7/stoner.png}
     \end{figure}
 
-\subsection{Magnetismo colinear y no colinear}
+\subsection{Magnetismo colineal y no colineal}
 
   En el caso no colineal no existe un único eje de cuantización principal, por lo que se deben generar CL entre los spins up y down; en cambio, en el caso colineal sí se tiene un único eje de cuantización principal permitiendo tener por un lado la contribución up y por otra parte la contribución down.
 
@@ -107,10 +107,151 @@
 
   Se estudia el magnetismo en metales de transición: Fe, Co y Ni.
 
-\subsection{Ex 1}
+\subsection{Ferromagnetismo en Fe BCC}
 
-  Activamos la solución mangética:
-  $nspin = 2$ 1 es para no polarizado y 2 es spin polarizado
-  $starting\_magnetization$ rompe la simetría entre el up y el down.
-  $noncolin=.true.$ sistema no colineal
-  $angle$ 1 es el polar y 2 es el acimutal. Necesario para el caso no colineal.
+  Vamos a comparar las soluciones no magnética y ferromagnética (colineal) para el caso de Fe BCC. Para eso calcularemos las constantes de red óptimas en cada caso usando LDA. Luego, calcularemos DOS y PDOS de ambos casos utilizando el parámetro de red óptimo.
+
+\subsubsection{Parámetro de red}
+
+  Primero vamos a estudiar el parámetro de red para el caso no magnético. El script barre el parámetro de red y calcula las energías del estado fundamental. Luego, reúne los resultados en $energies.dat$. Posteriormente ejecutamos ev.x y respondemos las preguntas que nos hace:
+    \begin{itemize}
+      \item Lattice parameter or Volume are in (au, Ang): au.
+      \item Enter type of bravais lattice (fcc, bcc, sc, noncubic): bcc.
+      \item 1=birch1, 2=birch2, 3=keane, 4=murnaghan: 4.
+      \item Input file: energies.dat.
+      \item Output file: nonmag.out
+    \end{itemize}
+
+  El mínimo se obtiene a los 5.1070 Bohr.
+
+  Para el caso mangético hacemos exactamente lo mismo. Como el cálculo es colineal, debemos agregar:
+    \begin{itemize}
+      \item $nspin=2$ indica que debe considerar polarización de spin colineal. Si fuera $1$ es que no hay polarización.
+      \item $starting\_magnetization(1)=0.3$ rompemos la simetría entre los spins up y down. Esto da como resultado una magnetización inicial igual a 0.3 multiplicada por la carga de valencia del ion.
+    \end{itemize}
+
+  En el output aparecerá la mangnetización total (con signo) y la absoluta.
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale = 0.6]{figs/D7/output_col.png}
+    \end{figure}
+
+  Si quisiéramos hacer un cálculo no colineal deberíamos agregar lo siguiente:
+    \begin{itemize}
+      \item $noncolin=.true.$ indica que queremos una polarización de spin no colineal.
+      \item $starting\_magnetization$ para romper la simetría.
+      \item $angle1(i)$ y $angle2(i)$ son los ángulos polar y acimutal, respectivamente, que determinan la dirección de la magnetización inicial para cada especie.
+    \end{itemize}
+
+    En el output aparecerá la mangnetización total (con signo y vectorial) y la absoluta.
+      \begin{figure}[H]
+          \centering
+          \includegraphics[scale = 0.6]{figs/D7/output_nocol.png}
+      \end{figure}
+
+    Además, en ambos casos aparecerá un estimado de la magnetización en cada sitio iónico, ya sea como una cantidad escalar o como una cantidad vectorial.
+      \begin{figure}[H]
+          \centering
+          \subfigure[colineal]{\includegraphics[scale = 0.6]{figs/D7/output_estim.png}}
+          \subfigure[no colineal]{\includegraphics[scale = 0.6]{figs/D7/output_vec.png}}
+      \end{figure}
+
+    Luego de hacer los cálculos, el mínimo se obtiene a los 5.1969 Bohr. Dado que el hierro es una material magnético, vemos que la solución magnética tiene menor energía total por celda. Además, tiene un parámetro de red mayor. Sin embargo, LSDA subestima el parámetro de red: el dato experimental es 5.4 Bohr.
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale = 0.6]{figs/D7/comparacion.png}
+    \end{figure}
+
+\subsubsection{DOS y PDOS: exchange splitting}
+
+  Utilizando los parámetros de red óptimos para cada caso, vamos a determinar sus DOS. Vemos que se rompe la degeneración al considerar magnetismo: los spins up se corren hacia valores por debajo de la energía de Fermi y los spins down se corren a valores más altos.
+
+  \begin{figure}[H]
+      \centering
+      \subfigure[no magnético]{\includegraphics[scale = 0.6]{figs/D7/DOS_nomag.png}}
+      \subfigure[magnético]{\includegraphics[scale = 0.6]{figs/D7/DOS_mag.png}}
+  \end{figure}
+
+  Vamos a corroborar que el exchange splitting está relacionado con la ocupación parcial del 3d del Fe: vemos claramente que la mayor contribución es del 3d.
+  \begin{figure}[H]
+      \centering
+      \includegraphics[scale = 0.6]{figs/D7/PDOS.png}
+  \end{figure}
+
+\subsubsection{Momento magnético bajo presión}
+
+  Vamos a estudiar la evolución del momento magnético de Fe para diferentes parámetros de red: veremos con PDOS que tanto el exchange splitting como el momento magnético se reducen a medida que el material es comprimido.
+
+  \Obs{Vamos a usar PBE en vez de LDA para tener parámetros de red más reales.}
+
+  A medida que achicamos la red, la magnetización disminuye.
+  \begin{figure}[H]
+      \centering
+      \includegraphics[scale = 0.6]{figs/D7/ex2.png}
+  \end{figure}
+
+\subsection{Magnetismo en metales de transición}
+
+  Vamos a comparar las propiedades magnéticas de Fe BCC, Co HPC y Ni FCC.
+
+  Primero vemos las DOS para cada caso.
+  \begin{figure}[H]
+      \centering
+      \subfigure[Fe]{\includegraphics[scale = 0.6]{figs/D7/ex3_DOS_Fe.png}}
+      \subfigure[Co]{\includegraphics[scale = 0.6]{figs/D7/ex3_DOS_Co.png}}
+      \subfigure[Ni]{\includegraphics[scale = 0.6]{figs/D7/ex3_DOS_Ni.png}}
+  \end{figure}
+
+  Luego hacemos la PDOS. Al final de los pdos.out se tienen las lowdin charges donde describe cada átomo e indica su polarización: tanto el momento magnético total como las contribuciones parciales de cada orbital participante (según el PP).
+
+  Resumen de resultados:
+    \begin{itemize}
+      \item total magnetization (SCF) Bohr magn/cell
+        \begin{itemize}
+          \item Fe    2.25
+          \item Co    3.34  (2 atoms per cell)
+          \item Ni    0.65
+        \end{itemize}
+      \item position of 3d pdos majoriy peak  w.r.t. Fermi Energy (eV)
+        \begin{itemize}
+          \item Fe  -0.91
+          \item Co  -0.88
+          \item Ni  -0.70
+        \end{itemize}
+      \item position of the 3d pdos minority peak w.r.t Fermi Energy (eV)
+        \begin{itemize}
+          \item Fe      +2.00
+          \item Co      +1.24
+          \item Ni      +0.15
+        \end{itemize}
+      \item Exch. splittings  (eV)
+        \begin{itemize}
+          \item Fe  2.91
+          \item Co  2.12
+          \item Ni  0.85
+        \end{itemize}
+      \item ion magnetization by Lowdin charges (`projwfc.x` output) in Bohr magn.
+        \begin{itemize}
+          \item Fe
+              \begin{verbatim}
+              polarization =   2.2245, s = -0.0197, p = -0.1266, d =  2.3707
+              \end{verbatim}
+           \item Co
+           \begin{verbatim}
+             polarization =   1.6457, s = -0.0196, p = -0.1288, d =  1.7941
+           \end{verbatim}
+           \item Ni
+           \begin{verbatim}
+             polarization =   0.6457, s = -0.0089, p = -0.0658, d =  0.7204
+           \end{verbatim}
+        \end{itemize}
+    \end{itemize}
+
+\subsection{Bandas en sistemas magnéticos: Ni FCC}
+
+  Vamos a calcular las bandas de Ni FCC con polarización de spin para el caso colineal y el no colineal.
+  \begin{figure}[H]
+      \centering
+      \subfigure[colineal]{\includegraphics[scale = 0.6]{figs/D7/Ni_col.png}}
+      \subfigure[nocolineal]{\includegraphics[scale = 0.6]{figs/D7/Ni_nocolin.png}}
+  \end{figure}
