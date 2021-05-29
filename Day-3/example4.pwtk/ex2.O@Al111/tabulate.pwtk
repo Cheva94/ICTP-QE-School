@@ -18,12 +18,10 @@ set xc_files topview.xcrysden; # to speed-up only one *.xcrysden file is used
 #set xc_files {
 #    topview.xcrysden
 #    sideview.xcrysden
-#}
+#}    
 
 
 # tabulate all the pw.x output files
 
-#automatically plots (i.e., prints to PNG file) structures from the supplied
-#`pw.x` output files and arranges them into a table as a LaTeX document.
 ::pwtk::pwo::tabulateStructs -xcd 1 -lc -ncol 5 \
     -E0 $E0 -Elabel {\Delta E} tabulate.tex $pwo_files $xc_files
