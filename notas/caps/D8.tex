@@ -15,12 +15,12 @@
 \subsection{Integración de las ecuaciones de movimiento}
 
   Queremos resolver
-    $$M_I \frac{d^2}{dt^2} R_I = F_I$$
+    $$M_I \frac{d^2}{dt^2} \vec{R}_I = \vec{F}_I$$
 
   Para eso, el primer paso es discretizar el tiempo. La posición luego de un paso de tiempo $\Delta t$ será
-    $$R_I (t)$$
+    $$\vec{R}_I (t)$$
 
-  Explica el algoritmo de Verlet. Toma la posición un paso de tiempo antes y un paso de tiempo después del tiempo actual. Al sumar las ecuaciones, tenemos que la velocidad desaparece, necesitando únicamente la posición, la cual ahora necesitamos dos posiciones previas. Con esto logramos además que el error sea de orden cuarto. Siempre necesitamos la fuerza ya que guía la definición de la trayectoria del movimiento.
+  Explica el algoritmo de Verlet. Toma la posición un paso de tiempo antes y un paso de tiempo después del tiempo actual. Al sumar las ecuaciones, tenemos que la velocidad desaparece, necesitando únicamente la posición, para la cual ahora necesitamos dos posiciones previas. Con esto logramos además que el error sea de cuarto orden. Siempre necesitamos la fuerza ya que guía la definición de la trayectoria del movimiento.
 
   \Obs{Cuántos más pasos previos consideramos, hacemos que el orden del error caiga cada vez más.}
 
@@ -46,9 +46,7 @@
   Supongamos que quiero calcular la temperatura instantánea. Luego, considerando el teorema de equipartición, tenemos
     $$T_{ins} = \frac{2}{3N k_B} \sum_I \frac{1}{2} M_I v_I^2 = \frac{3}{2} N k_B T$$
 
-  N partículas
-
-  Diferentes temperaturas iniciales dan lugar a diferentes temperaturas de equilibrio finales (ver figura)
+  Diferentes temperaturas iniciales dan lugar a diferentes temperaturas de equilibrio finales.
 
 \subsection{Ensambles}
 
@@ -56,45 +54,40 @@
 
   ¿Cómo simulo entonces un sistema a una cierta temperatura? O sea cómo simulo un ensamble canónico donde "conservo" la temperatura.
 
-  Para esto hay muchos trucos. Vemos uno. Partimos de la ecuación de Newton y le agregamos un término de fricción, proporcional a la velocidad. Dicha fricción es proporcional a [...]: si la temperatura está por debajo o por encima hace cosas distintas [...].
+  Para esto hay muchos trucos. Vemos uno. Partimos de la ecuación de Newton y le agregamos un término de fricción $\gamma$, proporcional a la velocidad. Dicha fricción es modulada para alcanzar la temperatura deseada: el signo y la intensidad de la fricción cambia según estemos por encima o por debajo de la temperatura de interés.
+    $$M \frac{d^2}{dt^2} \vec{R}_I =\vec{F}_I - \gamma \frac{d}{dt} \vec{R}_I$$
 
-  ¿Cómo modulo $\gamma$ para que se alcance la temperatura target? Una manera es tomar a $\gamma$ como una derivada y amar un sistema de ecuaciones. Toma la derivada temporal segunda de $\gamma$ que es proporcional a la diferencia entre temperaturas.
+  ¿Cómo modulo $\gamma$ para que se alcance la temperatura target? Una manera es tomar a $\gamma$ como una derivada y amar un sistema de ecuaciones. Toma la derivada temporal segunda de $\gamma$ que es proporcional a la diferencia entre temperaturas. Así nos queda
+    $$\begin{cases}
+      M \frac{d^2}{dt^2} \vec{R}_I =\vec{F}_I - \frac{d}{dt} \gamma \frac{d}{dt} \vec{R}_I \\
+      \frac{d^2}{dt^2} \gamma \approx  T_{inst} - T_{targ}
+    \end{cases}$$
 
-  Todo esto nos lleva a poder hacer un canónico. Esto es el termostato de Nosé.
+  Todo esto nos lleva a poder hacer un canónico. Esto es el termostato de Nosé. En general primero se hace un cálculo canónico y cuando se alcanza la estabilidad se hace un microncanónico.Existen otros termostatos así como existen barostatos.
 
-  Hizo una aclaración: hacer primero un canónico y después un microncanónico.
-
-  Existen otros termostatos así como existen barostatos (explica uno)
-
-  Una medida de que llegamos al equilibrio: las fluctuaciones de la temperatura tienden a hacerse constantes en torno a la temperatura target.  Se puede ver que las fluctuaciones de las temperaturas son propocionales al cuadrado de la inversa de la cantidad de partículas [...]. En el límite termodinámico las fluctuaciones tienden a cero y la temperatura instantánea es igual a la temperatura target.
+  Una medida de que llegamos al equilibrio: las fluctuaciones de la temperatura tienden a hacerse constantes en torno a la temperatura target. Se puede ver que las fluctuaciones de las temperaturas son propocionales al cuadrado de la inversa de la cantidad de partículas. En el límite termodinámico las fluctuaciones tienden a cero y la temperatura instantánea es igual a la temperatura target.
 
 \subsection{RDF}
 
-  Es una función de correlación de a pares. En un líquido se tiene un pico usualmente por una primera esfera. Luego hay fluctuaciones que tienden a una constante que tiene que ver con el desorden del sistema: tienden a uno, a la densidad del sistema.
-
+  Es una función de correlación de a pares. En un líquido se tiene un pico usualmente por una primera esfera de coordinación. Luego hay fluctuaciones que tienden a una constante que tiene que ver con el desorden del sistema: tienden a uno, a la densidad del sistema.
 
 \subsection{Potenciales}
 
-  Todo la cuestión \emph{ab initio} viene acá. Dónde jode el potencial?
-    $$M_I \frac{d^2}{dt^2} R_I = F_I = - \frac{d}{dR_I} V \left( \{ R_I \}  \right)$$
+  Todo la cuestión \emph{ab initio} viene acá. ¿Dónde jode el potencial?
+    $$M_I \frac{d^2}{dt^2} \vec{R}_I = \vec{F}_I = - \frac{d}{d\vec{R}_I} V \left( \{ \vec{R}_I \}  \right)$$
 
   Potenciales de a pares:
-    $$V \left( \{ R_I \}  \right) = \frac{1}{2} \sum_{I,J} \phi_{I,J}^{(2)} \norm{R_I - R_J}$$
+    $$V \left( \{ \vec{R}_I \}  \right) = \frac{1}{2} \sum_{I,J} \phi_{I,J}^{(2)} \norm{\vec{R}_I - R_J}$$
 
   Se le pueden agregar correciones: 3-body terms, 4-body terms, etcétera.
 
   Potenciales empíricos: parten de potenciales de a pares. Luego se le pueden agregar correciones 3-body, términos dependientes de la densidad (embeded: considera todas las demás partículas como un promedio)
-  [...]
 
-  NO PUSE VECTORES EN NINGUN LADO, OJO
-
-  La solución a todo esto es determinar el potencial ab initio: resolver el problema de manera cuántica para una dada configuración de iónica (ab initio ya considera a los electornes como funciones de onda, entonces las posiciones corresponden sólo a los núcleos).
+  La solución a todo esto es determinar el potencial ab initio: resolver el problema de manera cuántica para una dada configuración iónica (ab initio ya considera a los electornes como funciones de onda, entonces las posiciones corresponden sólo a los núcleos).
 
   La función de onda es función de las posiciones electrónicas, pero además depende paramétricamente de las posiciones iónicas. El estado fundamental depende entonces paramétricamente de las posiciones iónicas.
 
-  [hay una filmina con ab initio potenciales]
-
-  Cada vez que movemos los iones, debemos volver a encontrar el estado fundamental del sistema y derivar para encontrar las fueras. Esto hace que sea tanto más caro que una dinámica clásica.
+  Cada vez que movemos los iones, debemos volver a encontrar el estado fundamental del sistema y derivar para encontrar las fuerzas. Esto hace que sea tanto más caro que una dinámica clásica.
 
   Cuando las partículas se mueven muy poco, lo cual ocurre cuando tengo un paso de integración chico, puedo usar el estado fundamental encontrado en el estado anterior para determinar el nuevo estado. Esta función de prueba es muchísimo mejor que empezar con una función de prueba totalmente nueva.
 
@@ -106,18 +99,21 @@
 
   Encontrar el mínimo es como pensar en una parábola moviéndose en el espacio a lo largo del tiempo.
 
-  Lo que esablece CP es que debemos simultáneamente resolver simultáneamente dos ecuaciones [...]. En vez de encontrar el mínimo (muy caro), se hace una multiplicación matricial. Esto da lugar a oscilaciones en torno al mínimo. Estas oscilaciones deben ser lo suficientemente rápidas como para seguir adiabáticamente el mínimo.
+  Lo que esablece CP es que debemos simultáneamente resolver dos ecuaciones: una cuántica para los electrones y una clásica para los iones.
+    $$\begin{cases}
+      M \frac{d^2}{dt^2} \vec{R}_I =\vec{F}_I \\
+      \frac{d^2}{dt^2} \Psi \approx -H \Psi
+    \end{cases}$$
+
+  En vez de encontrar el mínimo de estas \emph{parábolas} todo el tiempo (muy caro), se hace una multiplicación matricial. Esto da lugar a oscilaciones en torno al mínimo. Estas oscilaciones deben ser lo suficientemente rápidas como para seguir adiabáticamente el mínimo.
 
 \section{Q\&A}
 
-CP vs BO:
+  \definicion{CP vs BO:}
 
   - para insulators es mejor CP que BO
   - metales o sistemas con gaps electronicos pequeños: mejor hacer BO.
   - escencialmente tiene que ver con la curvatura de la parábola de la que hablamos: insulator tiene muy steep así que es más fácil. para metales es más flat y les es más difícil.
-
-  ver bien la resppuesta!
-
 
 \section{Hands-on}
 
@@ -125,25 +121,5 @@ CP vs BO:
 
   \definicion{Speaker:} Riccardo BERTOSSA (SISSA, Italy).
 
-  ndw -- nombre de directorio donde va a escribir los archivos.
-
-  nstep -- pasos de la dinámica
-
-  iprint -- cada cuántos pasos guardo la información
-
-  isave -- cada cuanto tiempo quiero guardar un restart file (por si pasa algo con la compu entonces no se pierde todo)
-
-  dt -- paso temporal (ver como lo describe). Es importante que al comienzo de la simulación el paso sea chico (sobre todo cuando la guess no es muy buena) para que se muetree bien esa parte de acomodarse. Esto es para la BOMD.
-
-  electron\_dynamics --
-
-  ion\_dynamics -- cómo integrar las ecuaciones de movimiento
-
-  ion\_velocities -- velocidades iniciales
-
-  tempw -- temperatura target?
-
-  carta autopilot -- cambia parámetros on-the-fly en vez de hacer varios inputs con los parámetros diferentes.
-
-
-  ver después toda la explicación.
+  Vamos a hacer una AI
+  opic of the day: Ab initio molecular dynamics and usage of `cp.x`
