@@ -1,9 +1,7 @@
 #!/bin/bash 
 
-#
 # a small script to install the required packages for QE-2021 school (user
 # requires elevated privilages, i.e., sudo)
-#
 
 SUDO=${SUDO:-sudo}
 APT=${APT:-apt-get}
